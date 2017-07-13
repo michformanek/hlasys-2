@@ -2,6 +2,8 @@ parameters:
 
 
 doctrine:
-	user: root
-	password:
-	dbname: hlasys
+	dbname: sampledb
+	host: mysql
+	port: 3036
+	user: hlaszs
+	password: oD1eL5vrnoV8IL6o
