@@ -1,0 +1,58 @@
+<table class="table table-hover table-striped">
+    <thead>
+    <th>
+        ID
+    </th>
+    <th>
+        název
+    </th>
+    <th>
+        Popis
+    </th>
+    <th>
+        Výsledky
+    </th>
+    <th>
+        Stav
+    </th>
+    <th>
+        Rozhoduje
+    </th>
+    <th>
+        Vytvořil
+    </th>
+    <th>
+        Začátek hlasování
+    </th>
+    <th>
+        Konec hlasování
+    </th>
+    <th>
+        Akce
+    </th>
+    </thead>
+    <tbody>
+    {foreach $proposals as $proposal}
+        <tr>
+            <td>{$proposal->getId()}</td>
+            <td>
+                <a href="{plink Proposal:detail $proposal->getId()}">{$proposal->getTitle()} </a>
+            </td>
+            <td>{$proposal->getDescription()}</td>
+            <td></td>
+            <td>{if $proposal->getStatus()}{$proposal->getStatus()->getName()}{/if}</td>
+            <td>{$proposal->getResponsibleGroup()->getName()}</td>
+            <td>{$proposal->getAuthor()->getFullName()}</td>
+            <td>{$proposal->getDateCreated()|date:'Y-m-d'}</td>
+            <td>{$proposal->getDateEnd()|date:'Y-m-d'}</td>
+            <td>
+                {if $proposal->getTrash()}
+
+                {else}
+                    <a href="{plink Proposal:remove $proposal->getId()}">Koš</a>
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

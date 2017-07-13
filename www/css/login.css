@@ -1,0 +1,10 @@
+.login-box{
+margin-top: 13%;
+}
+.login-page{
+    background-image: url("../img/login-back.jpg");
+}
+
+.login-header{
+    font-size: xx-large;
+}

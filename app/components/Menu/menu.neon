@@ -1,0 +1,15 @@
+menu:
+
+    default:
+        template:
+            menu: %appDir%/components/Menu/menu.latte
+            breadcrumb: %appDir%/components/Menu/breadcrumb.latte
+
+        items:
+            Dashboard: Homepage:default
+            Přehled návrhů: Proposal:default
+            Moje návrhy: Proposal:mine
+            Přidat návrh: Proposal:create
+            Koš: Proposal:trash
+            Nápověda: Help:default
+            Nastavení: Settings:default

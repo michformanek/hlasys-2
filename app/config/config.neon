@@ -1,0 +1,65 @@
+parameters:
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+extensions:
+    console: Kdyby\Console\DI\ConsoleExtension
+    events: Kdyby\Events\DI\EventsExtension
+    annotations: Kdyby\Annotations\DI\AnnotationsExtension
+    doctrine: Kdyby\Doctrine\DI\OrmExtension
+    menu: DK\Menu\DI\Extension
+    cronner: stekycz\Cronner\DI\CronnerExtension
+
+
+includes:
+    - ../components/Menu/menu.neon
+
+services:
+	- App\Forms\ICommentFormFactory
+	- App\Forms\IProposalFormFactory
+	- App\Forms\IFilterFormFactory
+	- App\Forms\IVoteFormFactory
+	- App\Components\IProposalDatagridFactory
+	- App\Components\IProposalTableFactory
+
+	proposalRepository:
+	    class: App\Repository\ProposalRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Proposal
+	userRepository:
+	    class: App\Repository\UserRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\User
+	groupRepository:
+	    class: App\Repository\GroupRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Group
+	voteRepository:
+	    class: App\Repository\VoteRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Vote
+	watchRepository:
+	    class: App\Repository\WatchRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Watch
+	commentRepository:
+	    class: App\Repository\CommentRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Comment
+	authenticator: Nette\Security\SimpleAuthenticator([1: 1234])
+	router: App\RouterFactory::createRouter
+
+doctrine:
+    user: doctrine
+    password: '***'
+    dbname: hlasys_online
+    metadata:
+        App\Model: %appDir%

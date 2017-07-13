@@ -1,0 +1,13 @@
+{if !isset($menuParent)}
+    {var $menuParent = $menu}
+{/if}
+
+<ul n:block="branch" n:if="$menuParent->hasVisualItems()" class="nav">
+    <li n:foreach="$menuParent->getItems() as $item" n:if="$item->isVisual() && $item->isAllowed()"  n:class="$item->isActive() ? active">
+        <a href="{$item->getLink()}" class="ajax">
+            <i class="pe-7s-graph"></i>
+            <p>{$item->getTranslatedTitle()}</p>
+        </a>
+        {include branch, menuParent => $item}
+    </li>
+</ul>

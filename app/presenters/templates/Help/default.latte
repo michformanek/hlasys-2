@@ -1,0 +1,76 @@
+{block content}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Přístupy</h4>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <ul>
+                        <li>Pristup maji vsichni clenove hkfree - uid/password - heslo je z ldap(money)
+                        <li>Ucet 1/guest nefunguje
+                        <li>Synchronizace accountu z userDB probiha poloautomaticky, pokud vam nefunguje pristup napiste
+                            mne. Tyka se jenom SO a VV, pristup pro cteni maji vsichni automaticky.
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Prehled navrhu VV</h4>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <ul>
+                        <li>Obsahuje seznam navrhu o kterych hlasuje VV</li>
+                        <li>VV muze hlasovat, ostatni prohlizet navrhy</li>
+                        <li>Na email vv@hkfree.org se posilaji vsechny akce co se s danym navrhem provedli</li>
+                        <li>Smazat navrh muze VV, vrati zpet z kose pouze admin(coudek)</li>
+                        <li>Skladnik muze menit stav zakazky od te doby co se navrh prijme</li>
+                        <li>Navrh se prijme/zamitne v pripade 2/3 hlasu z VV</li>
+                        <li>Vsechny akce k jednotlivym navrhum se loguji</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Prehled navrhu SO</h4>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <ul>
+                        <li>Obsahuje seznam navrhu o kterych hlasuje SO</li>
+                        <li>SO muze hlasovat, ostatni prohlizet navrhy</li>
+                        <li>Na email so@hkfree.org chodi jen upozorneni o vlozeni navrhu, jednotlive hlasovani ne</li>
+                        <li>Smazat navrh muze SO, vratit zpet z kose pouze admin(coudek)</li>
+                        <li>Navrh se prijme/zamitne v pripade 2/3 hlasu z SO</li>
+                        <li>Hlasujici muze svuj zmenit svoje hlasovani</li>
+                        <li>Navrh se po schvaleni neuzamkne, dal jde hlasovat a vysledek se muze zmenit</li>
+                        <li>Vsechny akce k jednotlivym navrhum se loguji</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">Vlozit navrh</h4>
+                </div>
+                <div class="content table-responsive table-full-width">
+                    <ul>
+                        <li>Vlozit navrh muze kdokoliv</li>
+                        <li>U kazdeho navrhu se da nastavit kdo o nem bude hlasovat(VV,SO)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

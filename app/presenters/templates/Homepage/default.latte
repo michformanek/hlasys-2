@@ -1,0 +1,11 @@
+{* This is the welcome page, you can delete it *}
+
+{block content}
+
+
+<div id="content">
+	{foreach $proposals as $proposal}
+		<a n:href="Proposal:detail $proposal->getId()" >{$proposal->getTitle()} </a><br\>
+	{/foreach}
+	<a n:href="Proposal:create">Nový návrh</a>
+</div>

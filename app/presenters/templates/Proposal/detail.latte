@@ -1,0 +1,40 @@
+{block content}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default panel-danger">
+            <div class="panel-heading clearfix">
+
+                <h4 class="panel-title pull-left" style="padding-top: 4px">{$proposal->getTitle()}</h4>
+                <div class="btn-group pull-right">
+                    <a href="{plink Proposal:previous $proposal->getId()}" class="btn btn-default btn-sm">Předchozí</a>
+                    <a href="{plink Proposal:logs $proposal->getId()}" class="btn btn-default btn-sm">Logy</a>
+                    <a n:href="Proposal:watch $proposal->getId()" class="btn btn-default btn-sm">
+                        <i class="fa fa-eye" aria-hidden="true"></i>
+                    </a>
+                    <a href="{plink Proposal:next $proposal->getId()}" class="btn btn-default btn-sm">Další</a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="content">
+                    <p>{$proposal->getDescription()}</p>
+                    <hr/>
+                    {control voteForm}
+                    <hr/>
+                    {control commentForm}
+                    <hr/>
+                    {foreach $proposal->getComments() as $comment}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <blockquote>
+                                    <p>{$comment->getText()}</p>
+                                    <footer>{$comment->getUser()->getFullname()} <cite title="Source Title">
+                                            {$comment->getDate()|date:'Y-m-d H:i:s'}</cite></footer>
+                                </blockquote>
+                            </div>
+                        </div>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+parameters:
+
+
+doctrine:
+	user: root
+	password:
+	dbname: hlasys
