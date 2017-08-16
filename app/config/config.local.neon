@@ -5,3 +5,4 @@ doctrine:
 	user: adminBTVSjA1
 	password: ANKCuunL4NbR
 	dbname: hlasys
+	host: 127.3.18.3
