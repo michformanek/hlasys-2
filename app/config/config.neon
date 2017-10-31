@@ -4,6 +4,7 @@ parameters:
 application:
 	errorPresenter: Error
 	mapping:
+		Api: App\Api\*Api
 		*: App\*Module\Presenters\*Presenter
 
 
@@ -15,20 +16,55 @@ extensions:
     events: Kdyby\Events\DI\EventsExtension
     annotations: Kdyby\Annotations\DI\AnnotationsExtension
     doctrine: Kdyby\Doctrine\DI\OrmExtension
-    menu: DK\Menu\DI\Extension
     cronner: stekycz\Cronner\DI\CronnerExtension
+    replicator: Kdyby\Replicator\DI\ReplicatorExtension
+    restful: Drahak\Restful\DI\RestfulExtension
 
+mail:
+    smtp: true
+    host: smtp.office365.com
+    port: 587
+    username: "uhk.cz\formami5"
+    password: "General3"
 
-includes:
-    - ../components/Menu/menu.neon
+restful:
+	convention: 'snake_case'
+	cacheDir: '%tempDir%/cache'
+	jsonpKey: 'jsonp'
+	prettyPrintKey: 'pretty'
 
 services:
+	- App\Service\CommentService
+	- App\Service\CronService
+	- App\Service\GroupService
+	- App\Service\ItemService
+	- App\Service\LogService
+	- App\Service\MailService
+	- App\Service\ProposalService
+	- App\Service\StatusService
+	- App\Service\UserService
+	- App\Service\VoteService
+	- App\Service\VoteTypeService
+	- App\Service\WatchService
+
+	- App\Forms\IAdminFormFactory
 	- App\Forms\ICommentFormFactory
-	- App\Forms\IProposalFormFactory
 	- App\Forms\IFilterFormFactory
+	- App\Forms\ISearchFormFactory
+	- App\Forms\IUserSettingsFormFactory
 	- App\Forms\IVoteFormFactory
-	- App\Components\IProposalDatagridFactory
-	- App\Components\IProposalTableFactory
+	- App\Forms\IWatchFormFactory
+	- App\Forms\IReplicatorFormControl
+
+	- App\Menu\INavBarFactory
+	- App\Menu\ISideBarFactory
+
+	- App\Table\ICommentTableFactory
+	- App\Table\IItemTableFactory
+	- App\Table\ILogTableFactory
+	- App\Table\IProposalTableFactory
+	- App\Table\IVoteTableFactory
+	- App\Table\IWatchTableFactory
 
 	proposalRepository:
 	    class: App\Repository\ProposalRepository
@@ -46,10 +82,22 @@ services:
 	    class: App\Repository\VoteRepository
 	    tags:
 	        doctrine.repositoryEntity: App\Model\Vote
+	voteTypeRepository:
+	    class: App\Repository\VoteTypeRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\VoteType
 	watchRepository:
 	    class: App\Repository\WatchRepository
 	    tags:
 	        doctrine.repositoryEntity: App\Model\Watch
+	logRepository:
+	    class: App\Repository\LogRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Log
+	itemRepository:
+	    class: App\Repository\ItemRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\Item
 	commentRepository:
 	    class: App\Repository\CommentRepository
 	    tags:
@@ -60,6 +108,6 @@ services:
 doctrine:
     user: doctrine
     password: '***'
-    dbname: hlasys_online
+    dbname: hlasys
     metadata:
         App\Model: %appDir%

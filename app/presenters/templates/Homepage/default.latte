@@ -1,11 +1,10 @@
-{* This is the welcome page, you can delete it *}
-
 {block content}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">Neodhlasované návrhy</h1>
+    </div>
 
-
-<div id="content">
-	{foreach $proposals as $proposal}
-		<a n:href="Proposal:detail $proposal->getId()" >{$proposal->getTitle()} </a><br\>
-	{/foreach}
-	<a n:href="Proposal:create">Nový návrh</a>
+    <div class="card-block">
+        {control proposalTable $proposals}
+    </div>
 </div>

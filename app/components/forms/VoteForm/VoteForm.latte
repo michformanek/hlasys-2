@@ -1,10 +1,14 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="header">
-            <h4 class="title">Hlasovat</h4>
-        </div>
-        <div class="content">
-           {control voteForm}
-        </div>
-    </div>
+<div class="text-center">
+    {if $vote == null}
+        Pro tento návrh jste ještě nehlasoval. <br><br>
+        <a n:href="VotePositive" class=" btn btn-lg btn-success btn--icon waves-effect ajax"> Pro </a>
+        <a n:href="VoteNegative" class=" btn btn-lg btn-danger btn--icon waves-effect ajax"> Proti </a>
+    {elseif $vote->getType()}
+        Tento návrh jste schválil, ale můžete si to ještě rozmyslet.<br><br>
+        <a n:href="VoteNegative" class="btn btn-lg btn-danger btn--icon waves-effect ajax"> Proti </a>
+    {else}
+        Tento návrh jste zamítl, můžete ho ještě schválit.<br><br>
+        <a n:href="VotePositive" class="btn btn-lg btn-success btn--icon waves-effect ajax"> Pro </a>
+    {/if}
+
 </div>

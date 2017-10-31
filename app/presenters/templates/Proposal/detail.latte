@@ -1,38 +1,71 @@
 {block content}
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default panel-danger">
-            <div class="panel-heading clearfix">
 
-                <h4 class="panel-title pull-left" style="padding-top: 4px">{$proposal->getTitle()}</h4>
-                <div class="btn-group pull-right">
-                    <a href="{plink Proposal:previous $proposal->getId()}" class="btn btn-default btn-sm">Předchozí</a>
-                    <a href="{plink Proposal:logs $proposal->getId()}" class="btn btn-default btn-sm">Logy</a>
-                    <a n:href="Proposal:watch $proposal->getId()" class="btn btn-default btn-sm">
-                        <i class="fa fa-eye" aria-hidden="true"></i>
-                    </a>
-                    <a href="{plink Proposal:next $proposal->getId()}" class="btn btn-default btn-sm">Další</a>
+<div class="card">
+
+    <div class="card-header">
+        <h1>{$proposal->getTitle()}</h1>
+
+        <div class="actions">
+            <a n:href="Edit $proposal->getId()" class="actions__item zmdi zmdi-edit" title="Upravit"></a>
+            {snippet watchFormTop}
+                {control watchForm}
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card-block">
+        {$parsedown->text($proposal->getDescription())|noescape}
+
+        {snippet itemTable}
+            {control itemTable}
+        {/snippet}
+
+        <br>
+        {snippet voteFormTop}
+            {control voteForm}
+        {/snippet}
+        <br>
+
+
+        <div class="tab-container">
+            <ul class="nav nav-tabs nav-fill" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#comments" role="tab">Komentáře</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#logs" role="tab">Logy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#votes" role="tab">Hlasy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#watches" role="tab">Watche</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active fade show" id="comments" role="tabpanel">
+                        {snippet commentTable}
+                            {control commentTable $proposal->getId()}
+                        {/snippet}
+                        {snippet commentForm}
+                            {control commentForm}
+                        {/snippet}
                 </div>
-            </div>
-            <div class="panel-body">
-                <div class="content">
-                    <p>{$proposal->getDescription()}</p>
-                    <hr/>
-                    {control voteForm}
-                    <hr/>
-                    {control commentForm}
-                    <hr/>
-                    {foreach $proposal->getComments() as $comment}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <blockquote>
-                                    <p>{$comment->getText()}</p>
-                                    <footer>{$comment->getUser()->getFullname()} <cite title="Source Title">
-                                            {$comment->getDate()|date:'Y-m-d H:i:s'}</cite></footer>
-                                </blockquote>
-                            </div>
-                        </div>
-                    {/foreach}
+                <div class="tab-pane fade" id="logs" role="tabpanel">
+                        {snippet logTable}
+                            {control logTable}
+                        {/snippet}
+                </div>
+                <div class="tab-pane fade" id="votes" role="tabpanel">
+                    {snippet voteTable}
+                        {control voteTable}
+                    {/snippet}
+                </div>
+                <div class="tab-pane fade" id="watches" role="tabpanel">
+                        {snippet watchTable}
+                            {control watchTable}
+                        {/snippet}
                 </div>
             </div>
         </div>

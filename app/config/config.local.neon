@@ -4,4 +4,4 @@ parameters:
 doctrine:
 	user: root
 	password:
-	dbname: hlasys
+	dbname: hlasys-dev

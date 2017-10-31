@@ -1,0 +1,75 @@
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Nový návrh</h2>
+    </div>
+
+    <div class="card-block">
+        {form myForm}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {label title /}
+                        {input title, class=>"form-control", id=>"title"}
+                        <i class="form-group__bar"></i>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        {label voteType /}
+                        {input voteType, class=>"form-control", id=>"voteType"}
+                        <i class="form-group__bar"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {label dateStart /}
+                        {input dateStart, class=>"form-control", id=>"dateStart", disabled=>true}
+                        <i class="form-group__bar"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {label dateEnd /}
+                        {input dateEnd, class=>"form-control", id=>"dateEnd", disabled=>true}
+                        <i class="form-group__bar"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {label description /}
+                        {input description, class=>"form-control textarea-autosize", id=>"description", style=>"overflow: hidden; word-wrap: break-word; height: 50px;"}
+                        <i class="form-group__bar"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {label description /}
+                        {snippet markdown}
+                            {$description|noescape}
+                        {/snippet}
+                        <i class="form-group__bar"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <h3 class="card-title">Položky</h3>
+            </div>
+            <div class="row">
+                {control itemTable}
+            </div>
+            <p>{input send, class=>"btn btn-primary"}</p>
+        {/form}
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#description').on('keyup', function () {
+        $.nette.ajax({
+            type: 'GET',
+            url: {link descriptionChange},
+            data: { {$control->getParameterId('value')}:
+        $(this).val()
+    }
+    })
+    })
+</script>

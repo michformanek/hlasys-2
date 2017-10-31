@@ -1,0 +1,20 @@
+<div class="toolbar toolbar--inner col-md-12">
+    <div class="toolbar__label">{$logs->count()}</div>
+</div>
+
+<div class="listview listview--bordered">
+    {foreach $logs as $log}
+        <div class="listview__item">
+            <label class="custom-control todo__item">
+                <span class="custom-control--char__helper">
+                        {$log->getUser()->getUserName()}
+                </span>
+                <div class="todo__info">
+                    <span>{$log->getText()}</span>
+                    <span>({$log->getDate()|date:'j. n. Y'})</span>
+                </div>
+            </label>
+        </div>
+
+    {/foreach}
+</div>

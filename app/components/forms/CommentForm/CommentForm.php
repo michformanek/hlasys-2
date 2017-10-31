@@ -2,90 +2,75 @@
 
 namespace App\Forms;
 
-use App\Model\Comment;
-use App\Repository\CommentRepository;
-use App\Repository\ProposalRepository;
-use App\Repository\UserRepository;
+use App\Service\CommentService;
 use DateTime;
-use Nette\Application\UI;
-use Nette\Security\User;
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Form;
 
-class CommentForm extends UI\Control
+class CommentForm extends Control
 {
     /**
-     * @var CommentRepository
+     * @var CommentService
      */
-    private $commentRepository;
-    /**
-     * @var ProposalRepository
-     */
-    private $proposalRepository;
-    /**
-     * @var User
-     */
-    private $currentUser;
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
+    private $commentService;
 
     public $onCommentSave;
 
-    /**
-     * LoginForm constructor.
-     * @param CommentRepository $commentRepository
-     * @param ProposalRepository $proposalRepository
-     * @param User $currentUser
-     */
-    public function __construct(CommentRepository $commentRepository, ProposalRepository $proposalRepository, UserRepository $userRepository, User $currentUser)
+    public function __construct(
+        CommentService $commentService)
     {
-        parent::__construct();
-        $this->commentRepository = $commentRepository;
-        $this->proposalRepository = $proposalRepository;
-        $this->currentUser = $currentUser;
-        $this->userRepository = $userRepository;
+        $this->commentService = $commentService;
     }
 
-    /**
-     * @return Form
-     */
-    protected function createComponentCommentForm()
+    public function createComponentCommentForm()
     {
-        $form = new UI\Form;
-        $form->addTextArea('text')
-            ->setRequired('Prosím zadejte text komentáře');
-        $form->addSubmit('send', 'Přidat komentář');
-        $form->onSuccess[] = [$this, 'commentFormSucceeded'];
+
+        $form = new Form;
+        $form->addHidden('id');
+        $form->addHidden('userId');
+
+        $form->addHidden('proposalId')
+            ->setDefaultValue($this->getPresenter()->getParameter('id'));
+
+        $form->addTextArea('text', 'Text komentáře')
+            ->setRequired('Vyplňte, prosím, text komentáře.');
+
+        $form->addSubmit('send', 'Uložit');
+
+        $form->onSuccess[] = [$this, 'success'];
         return $form;
     }
 
-    //FIXME: čas vytvoření, autor příspěvku, editace
-    public function commentFormSucceeded($form, $values)
+    public function success($form, $values)
     {
-        $this->currentUser->login('1', '1234');
-        $comment = new Comment();
-        $proposalId = $this->presenter->getParameter('id');
-        $comment->setProposal($this->proposalRepository->find($proposalId));
-        $comment->setText($values->text);
-        $comment->setDate(new DateTime());
-        $userId = $this->currentUser->id ? $this->currentUser->id : 1; //FIXME: Pouze přihlášené!!!
-        $comment->setUser($this->userRepository->find($userId));
-        $this->commentRepository->saveOrUpdate($comment);
-        $this->flashMessage('Děkuji za komentář', 'success');
-        $this->onCommentSave($this, $comment);
+        $this->commentService->createComment($values);
+        $this['commentForm']->setValues(['text' => '', 'id' => '']);
+        $this->onCommentSave();
     }
 
     public function render()
     {
-        $this->template->render(__DIR__ . '/CommentForm.latte');
+        $template = $this->template;
+        $template->setFile(__DIR__ . '/CommentForm.latte');
+        $template->render();
+    }
+
+    public function edit($commentId)
+    {
+        $comment = $this->commentService->findOne($commentId);
+        $values = array();
+        $values['id'] = $comment->getId();
+        $values['proposalId'] = $comment->getProposal()->getId();
+        $values['text'] = $comment->getText();
+        $values['userId'] = $comment->getUser()->getId();
+        $this['commentForm']->setDefaults($values);
     }
 }
 
 interface ICommentFormFactory
 {
     /**
-     * @param int $id
      * @return CommentForm
      */
-    function create();
+    public function create();
 }

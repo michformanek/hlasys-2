@@ -1,23 +1,10 @@
 {block content}
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="content">
-                {control filterForm}
-            </div>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">Přehled návrhů</h1>
     </div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="header">
-                <h4 class="title">Návrhy</h4>
-            </div>
-            <div class="content table-responsive table-full-width">
-                {control proposalTable}
-            </div>
-        </div>
+
+    <div class="card-block">
+        {control proposalTable $proposals}
     </div>
 </div>
-
-

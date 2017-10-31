@@ -1,0 +1,12 @@
+<div class="listview">
+    {foreach $watches as $watch}
+        <div class="listview__item">
+            <label class="custom-control todo__item">
+                <div class="todo__info">
+                    <span>{$watch->getUser()->getUserName()}</span>
+                </div>
+            </label>
+        </div>
+
+    {/foreach}
+</div>

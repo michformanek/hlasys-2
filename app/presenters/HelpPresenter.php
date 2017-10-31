@@ -12,4 +12,7 @@ namespace App\Presenters;
 class HelpPresenter extends SecuredPresenter
 {
 
+    public function renderDefault(){
+
+    }
 }

@@ -1,0 +1,39 @@
+<div class="toolbar toolbar--inner col-md-12">
+    <div class="toolbar__label">{count($comments)}</div>
+
+    <div class="actions">
+        <i class="actions__item zmdi zmdi-search" data-ma-action="toolbar-search-open"></i>
+    </div>
+
+    <div class="toolbar__search">
+        <input type="text" placeholder="Vyhledávat...">
+        <i class="toolbar__search__close zmdi zmdi-long-arrow-left" data-ma-action="toolbar-search-close"></i>
+    </div>
+</div>
+
+<div class="listview listview--bordered">
+    {foreach $comments as $comment}
+        <div class="listview__item">
+            <label class="custom-control todo__item">
+                <span class="custom-control--char__helper">
+                        {$comment->getUser()->getUserName()}
+                </span>
+                <div class="todo__info">
+                    <span>{$comment->getText()}</span>
+                    <small>{$comment->getDate()|date:'j. n. Y'}</small>
+                </div>
+            </label>
+
+            <div class="actions listview__actions">
+                <div class="dropdown actions__item">
+                    <i class="zmdi zmdi-more-vert" data-toggle="dropdown"></i>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a n:href="Remove $comment->getId()" class="dropdown-item ajax">Odstranit</a>
+                        <a n:href="Edit $comment->getId()" class="dropdown-item ajax">Upravit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {/foreach}
+</div>

@@ -22,12 +22,13 @@
 		"tracy/tracy": "^2.4",
 		"dg/composer-cleaner": "^1.0",
 		"kdyby/doctrine": "^3.2",
-		"carrooi/nette-menu": "^1.1",
 		"stekycz/cronner": "^2.1",
-		"ublaboo/datagrid": "^5.4"
+		"erusev/parsedown": "^1.6",
+		"kdyby/forms-replicator": "@dev",
+		"webchemistry/forms-multiplier": "^2.0",
+		"drahak/restful": "@dev"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"
-	},
-	"minimum-stability": "stable"
+	}
 }

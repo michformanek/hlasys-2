@@ -1,254 +1,279 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: MFormanek
- * Date: 12.06.2017
- * Time: 9:44
- */
 
 namespace App\Presenters;
 
-use App\Components\IProposalDatagridFactory;
-use App\Components\IProposalTableFactory;
-use App\Forms\CommentForm;
-use App\Forms\FilterForm;
+
 use App\Forms\ICommentFormFactory;
-use App\Forms\IFilterFormFactory;
-use App\Forms\IProposalFormFactory;
+use App\Forms\IReplicatorFormControl;
 use App\Forms\IVoteFormFactory;
-use App\Forms\ProposalForm;
-use App\Forms\VoteForm;
-use App\Model\Watch;
-use App\Repository\ProposalRepository;
-use App\Repository\WatchRepository;
-use Doctrine\ORM\EntityManager;
-use Nette\Application\UI\Presenter;
-use Nette\Security\User;
+use App\Forms\IWatchFormFactory;
+use App\Forms\WatchForm;
+use App\Model\Proposal;
+use App\Service\CommentService;
+use App\Service\GroupService;
+use App\Service\MailService;
+use App\Service\ProposalService;
+use App\Service\VoteTypeService;
+use App\Table\ICommentTableFactory;
+use App\Table\IItemTableFactory;
+use App\Table\ILogTableFactory;
+use App\Table\IProposalTableFactory;
+use App\Table\IVoteTableFactory;
+use App\Table\IWatchTableFactory;
+use Nette\Application\UI\Form;
+use Nette\Application\UI\Multiplier;
 
 class ProposalPresenter extends SecuredPresenter
 {
-
-    /** @persistent */
-    public $filter = [];
-
     /**
-     * @var ProposalRepository
+     * @var ProposalService
      */
-    private $proposalRepository;
+    private $proposalService;
+    /**
+     * @var IProposalTableFactory
+     */
+    private $proposalsTableFactory;
+    /**
+     * @var IWatchFormFactory
+     */
+    private $watchFormFactory;
     /**
      * @var ICommentFormFactory
      */
     private $commentFormFactory;
     /**
-     * @var IProposalFormFactory
+     * @var ICommentTableFactory
      */
-    private $proposalFormFactory;
+    private $commentTableFactory;
+    /**
+     * @var ILogTableFactory
+     */
+    private $logTableFactory;
     /**
      * @var IVoteFormFactory
      */
     private $voteFormFactory;
     /**
-     * @var WatchRepository
+     * @var IVoteTableFactory
      */
-    private $watchRepository;
-
-    private $currentUser;
-
-    private $em;
+    private $voteTableFactory;
     /**
-     * @var IProposalDatagridFactory
+     * @var MailService
      */
-    private $proposalDatagridFactory;
-    /**
-     * @var IProposalTableFactory
-     */
-    private $proposalTableFactory;
+    private $mailService;
 
+    private $proposal;
+    private $comment;
     /**
-     * @var IFilterFormFactory
+     * @var IWatchTableFactory
      */
-    private $filterFormFactory;
+    private $watchTableFactory;
+    /**
+     * @var GroupService
+     */
+    private $groupService;
+    /**
+     * @var VoteTypeService
+     */
+    private $voteTypeService;
+    /**
+    /**
+     * @var IItemTableFactory
+     */
+    private $itemTableFactory;
+    /**
+     * @var CommentService
+     */
+    private $commentService;
+    /**
+     * @var IReplicatorFormControl
+     */
+    private $replicatorFormControl;
 
-    public function __construct(ProposalRepository $proposalRepository,
-                                WatchRepository $watchRepository,
-                                ICommentFormFactory $commentFormFactory,
-                                IFilterFormFactory $filterFormFactory,
-                                IProposalFormFactory $proposalFormFactory,
-                                IProposalDatagridFactory $proposalDatagridFactory,
-                                IProposalTableFactory $proposalTableFactory,
-                                IVoteFormFactory $voteFormFactory,
-                                User $user,
-                                EntityManager $entityManager
+    public function __construct(
+        IProposalTableFactory $proposalsTableFactory,
+        IWatchFormFactory $watchFormFactory,
+        IWatchTableFactory $watchTableFactory,
+        ICommentFormFactory $commentFormFactory,
+        ICommentTableFactory $commentTableFactory,
+        ILogTableFactory $logTableFactory,
+        IVoteFormFactory $voteFormFactory,
+        IItemTableFactory $itemTableFactory,
+        IVoteTableFactory $voteTableFactory,
+        IReplicatorFormControl $replicatorFormControl,
+        ProposalService $proposalService,
+        MailService $mailService,
+        GroupService $groupService,
+        VoteTypeService $voteTypeService,
+        CommentService $commentService
     )
     {
-        $this->proposalRepository = $proposalRepository;
+        $this->proposalsTableFactory = $proposalsTableFactory;
+        $this->watchFormFactory = $watchFormFactory;
         $this->commentFormFactory = $commentFormFactory;
-        $this->proposalFormFactory = $proposalFormFactory;
+        $this->commentTableFactory = $commentTableFactory;
+        $this->logTableFactory = $logTableFactory;
         $this->voteFormFactory = $voteFormFactory;
-        $this->watchRepository = $watchRepository;
-        $this->currentUser = $user;
-        $this->em = $entityManager;
-        $this->proposalDatagridFactory = $proposalDatagridFactory;
-        $this->proposalTableFactory = $proposalTableFactory;
-         $this->filterFormFactory = $filterFormFactory;
+        $this->voteTableFactory = $voteTableFactory;
+        $this->proposalService = $proposalService;
+        $this->mailService = $mailService;
+        $this->watchTableFactory = $watchTableFactory;
+        $this->groupService = $groupService;
+        $this->voteTypeService = $voteTypeService;
+        $this->itemTableFactory = $itemTableFactory;
+        $this->commentService = $commentService;
+        $this->replicatorFormControl = $replicatorFormControl;
     }
 
-    public function renderDetail($id)
+    public function renderDefault()
     {
-        $proposal = $this->proposalRepository->find($id);
-        if (!$proposal) {
-            $this->error('Návrh nebyl nalezen');
-        }
+        $this->template->proposals = $this->proposalService->findAll();
 
-        $this->template->proposal = $proposal;
     }
 
-    public function renderEdit($id)
+    public function renderDeleted()
     {
-        $proposal = $this->proposalRepository->find($id);
-        if (!$proposal) {
-            $this->error('Návrh nebyl nalezen'); //FIXME Kontrolovat zda aktualni uzivatel muze editovat zaznam {autor/vyprseni}, kdyz ne, redirect
-        }
-
-        $this->template->proposal = $proposal;
+        $this->template->proposals = $this->proposalService->findDeleted();
     }
 
-    public function renderLogs($id)
+    public function renderMine()
     {
-        $proposal = $this->proposalRepository->find($id);;
-        if (!$proposal) {
-            $this->error('Návrh nebyl nalezen');
-        }
-        $this->template->logs = $proposal->getLogs();
-        $this->template->id = $id;
+        $this->template->proposals = $this->proposalService->findMine();
     }
 
     public function renderCreate()
     {
         $this->setView('edit');
+        $this->proposal = new Proposal();
     }
 
-    public function actionWatch($id)
+    public function renderEdit($id)
     {
-        $proposal = $this->em->getReference('App\Model\Proposal', $id);
-        $user = $this->em->getReference('App\Model\User', $this->currentUser->getId());
-        $watch = $this->watchRepository->findOneBy(array('user' => $user,'proposal' => $proposal));
-        if($watch){
-            $this->em->remove($watch);
-            $this->em->flush();
-            $this->flashMessage('Watch byl odstranen');
-            $this->redirect('Proposal:detail',$id);
+        $this['proposalForm']->edit($id);
+    }
+
+    public function renderDetail($id)
+    {
+        $proposal = $this->proposalService->findOne($id);
+        if ($proposal == null) {
+            //fixme 404
         }
-
-
-        $watch = new Watch();
-        $watch->setProposal($proposal);
-        $watch->setUser($user);
-        $this->watchRepository->saveOrUpdate($watch);
-
-        $this->flashMessage('Watch byl přidán');
-        $this->redirect('Proposal:detail', $id);
+        $this->proposal = $proposal;
+        $this->template->proposal = $this->proposal;
+        $this->template->parsedown = new \Parsedown();
     }
 
-    public function actionNext($id)
+    public function actionTrash($id)
     {
-        $proposals = $this->proposalRepository->findByFilter($this->filter);
-        foreach($proposals as $index=>$value) {
-            if ($value->getId() == $id){
-                if ( $index == count($proposals) - 1){
-                    $this->flashMessage('Jste na konci');
-                    $this->redirect('Proposal:detail',$id);
-                }
-                $proposal = $proposals[$index+1];
-                $this->redirect('Proposal:detail', $proposal->getId());
-            }
-        }
+
     }
 
-    public function actionPrevious($id)
+    public function actionRemoveComment($commentId)
     {
-        $proposals = $this->proposalRepository->findByFilter($this->filter);
-        foreach($proposals as $index=>$value) {
-            if ($value->getId() == $id){
-                if ($index == 0){
-                    $this->flashMessage('Jste na začátku');
-                    $this->redirect('Proposal:detail',$id);
-                }
-                $proposal = $proposals[$index-1];
-                $this->redirect('Proposal:detail', $proposal->getId());
-            }
-        }
+        $this->commentService->deleteComment($commentId);
+        $this->redrawControl('commentTable');
     }
 
-    public function actionRemove($id)
+    public function actionEditComment($commentId)
     {
-        $proposal = $this->proposalRepository->find($id);
-        $proposal->setTrash(true);
-        $this->proposalRepository->saveOrUpdate($proposal);
-        $title = $proposal->getTitle();
-        $this->flashMessage("Návrh ${$title} byl přemístěn do koše");
-        $this->redirect('Proposal:default'); //FIXME Redirect na předchozí stranu
+        $this['commentForm']->edit($commentId);
+        $this->redrawControl('commentForm');
     }
 
-    protected function createComponentCommentForm()
+    public function createComponentProposalTable()
     {
-        $control = $this->commentFormFactory->create();
-        $control->onCommentSave[] = function (CommentForm $commentForm, $comment) {
-            $this->redirect('this');
+        return $this->proposalsTableFactory->create();
+    }
+
+    public function createComponentVoteTable()
+    {
+        $votes = $this->proposal->getVotes();
+        return $this->voteTableFactory->create($votes);
+    }
+
+    public function createComponentWatchTable()
+    {
+        $watches = $this->proposal->getWatches();
+        return $this->watchTableFactory->create($watches);
+    }
+
+    public function createComponentLogTable()
+    {
+        $logs = $this->proposal->getLogs();
+        return $this->logTableFactory->create($logs);
+    }
+
+    public function createComponentItemTable()
+    {
+        $items = $this->proposal->getItems();
+        return $this->itemTableFactory->create($items);
+    }
+
+    public function createComponentCommentTable()
+    {
+        $control = $this->commentTableFactory->create();
+        $control->onRemove[] = function () {
+            $this->redrawControl('commentTable');
+            $this->redrawControl('logTable');
+        };
+        $control->onEdit[] = function ($commentId) {
+            $this->actionEditComment($commentId);
+        };
+        return $control;
+    }
+
+    public function createComponentVoteForm()
+    {
+        $proposalId = $this->getParameter('id');
+        $control = $this->voteFormFactory->create($proposalId);
+        $control->onVote[] = function () {
+            $this->redrawControl('logTable');
+            $this->redrawControl('voteTable');
+            $this->redrawControl('voteFormTop');
+
+            //$this->redirect('this');
+            //TODO
+            // Volitelny redirect na dalsi navrh po odhlasovani,
+            // vytahnout z filtru uloženém kdesi v presenteru.
         };
 
         return $control;
     }
 
-    protected function createComponentVoteForm()
+
+    public function createComponentCommentForm()
     {
-        $control = $this->voteFormFactory->create();
-        $control->onVote[] = function (VoteForm $voteForm, $vote) {
-            $this->redirect('this'); //TODO Volitelny redirect na dalsi navrh po odhlasovani, vytahnout z filtru uloženém kdesi v presenteru.
+        $proposalId = $this->getParameter('id');
+        $control = $this->commentFormFactory->create($this->comment, $proposalId);
+        $control->onCommentSave[] = function () {
+            $this->redrawControl('commentTable');
+            $this->redrawControl('logTable');
+            $this->redrawControl('commentForm');
+        };
+        return $control;
+    }
+
+    public function createComponentWatchForm()
+    {
+        $proposalId = $this->getParameter('id');
+        $control = $this->watchFormFactory->create($proposalId);
+        $control->onWatchChanged[] = function ($proposalId) {
+            $this->redrawControl('watchTable');
+            $this->redrawControl('logTable');
+            $this->redrawControl('watchFormBottom');
+            $this->redrawControl('watchFormTop');
+            //    $this->redirect('Proposal:detail', $proposalId);
         };
         return $control;
     }
 
     public function createComponentProposalForm()
     {
-        $control = $this->proposalFormFactory->create();
-
-        $control->onProposalSave[] = function (ProposalForm $proposalForm, $proposal) {
-            $this->redirect('Proposal:detail', $proposal->getId());
-        };
-
+        $control = $this->replicatorFormControl->create();
+//        $control->onProposalSave[] = function () {
+//
+//        };
         return $control;
     }
-
-    public function createComponentProposalTable()
-    {
-        $proposals=$this->proposalRepository->findByFilter($this->filter);
-        return $this->proposalTableFactory->create($proposals);
-    }
-
-    public function createComponentDeletedProposals()
-    {
-        $user = $this->em->getReference('App\Model\User', $this->currentUser->getId());
-        return $this->proposalTableFactory->create($this->proposalRepository->findBy(array('trash'=>true)));
-    }
-
-    public function createComponentMineProposals()
-    {
-        $user = $this->em->getReference('App\Model\User', $this->currentUser->getId());
-        return $this->proposalTableFactory->create($this->proposalRepository->findBy(array('author' => $user)));
-    }
-
-    public function createComponentFilterForm()
-    {
-        $control = $this->filterFormFactory->create($this->filter);
-        $control->onFilter[] = function ($form,$filter) {
-            $this->filter = $filter;
-            $this->redirect('this');
-        };
-
-        return $control;
-    }
-
-
 
 }

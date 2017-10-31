@@ -1,0 +1,24 @@
+<table class="table col-md-12">
+    <thead>
+    <tr>
+        <th>Datum</th>
+        <th>Uživatel</th>
+        <th>Pro\Proti</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $votes as $vote}
+        <tr n:class="$vote->getType() ? table-success : table-danger">
+            <td>{$vote->getDate()|date:'j. n. Y'}</td>
+            <td>                                    {$vote->getUser()->getUsername()}</td>
+            <td>
+                {if $vote->getType()}
+                    pro návrh
+                {else}
+                    proti návrhu
+                {/if}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

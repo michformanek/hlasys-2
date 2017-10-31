@@ -1,0 +1,5 @@
+{if $watch == null}
+    <a n:href="Add" class="actions__item zmdi zmdi-eye-off ajax" title="Přidat watch"></a>
+{else}
+    <a n:href="Remove $watch->getId()" class="actions__item zmdi zmdi-eye ajax" title="Odstranit watch"></a>
+{/if}

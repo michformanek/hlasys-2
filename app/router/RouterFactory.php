@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Drahak\Restful\Application\Routes\CrudRoute;
+use Drahak\Restful\Application\Routes\ResourceRoute;
 use Nette;
 use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
@@ -17,8 +19,11 @@ class RouterFactory
 	public static function createRouter()
 	{
 		$router = new RouteList;
-		$router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
-		return $router;
+        $router[] = new CrudRoute('api/v1/<presenter>[/<id>[/<relation>[/<relationId>]]]', array(
+            'module' => 'Api',
+        ));
+        $router[] = new Route('<presenter>/<action>[/<id>]', 'Homepage:default');
+        return $router;
 	}
 
 }

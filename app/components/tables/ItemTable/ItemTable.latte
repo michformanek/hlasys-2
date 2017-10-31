@@ -1,0 +1,35 @@
+{if count($items) > 0 }
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <tr class="text-uppercase">
+                <th>Název</th>
+                <th>Cena</th>
+                <th>KS</th>
+                <th>Celkem</th>
+            </tr>
+            </thead>
+            <tbody>
+            {var $soucet = 0}
+            {foreach $items as $item}
+                {var $cena = $item->getPrice() * $item->getAmount()}
+                {var $soucet += $cena}
+                <tr>
+                    <td style="width: 50%">
+                        <a href={$item->getUrl()}>
+                            {$item->getName()}
+                        </a>
+                    </td>
+                    <td>{$item->getPrice()},- Kč</td>
+                    <td>{$item->getAmount()}</td>
+                    <td>{$cena},- Kč</td>
+                </tr>
+            {/foreach}
+            <tr>
+                <td colspan="3"></td>
+                <td>{$soucet},- Kč</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{/if}

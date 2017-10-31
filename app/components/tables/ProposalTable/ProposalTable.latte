@@ -1,0 +1,46 @@
+<table class="table mb-0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Název</th>
+        <th>Cena</th>
+        <th>Pro / Proti / Nehlasovalo</th>
+        <th>Stav</th>
+        <th>Rozhoduje</th>
+        <th>Vytvořil</th>
+        <th>Od</th>
+        <th>Do</th>
+        <th>Akce</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {foreach $proposals as $proposal}
+    <tr>
+        <td>{$proposal->getId()}</td>
+        <td>
+            <a href="{plink Proposal:detail $proposal->getId()}">{$proposal->getTitle()} </a>
+        </td>
+        <td>
+
+        </td>
+        <td>
+            {if $proposal->getVoteResult() != null}
+                {$proposal->getVoteResult()->getPositiveVotes()} /
+                {$proposal->getVoteResult()->getNegativeVotes()} /
+                {$proposal->getVoteResult()->getUnvoted()}
+            {/if}
+        </td>
+        <td>{$proposal->getStatus()->getName()}</td>
+        <td>{$proposal->getGroup()->getName()}</td>
+        <td>{$proposal->getUser()->getUsername()}</td>
+        <td>{$proposal->getDateStart() |date:'%d.%m.%Y'}</td>
+        <td>{$proposal->getDateEnd() |date:'%d.%m.%Y'}</td>
+        <td>
+            <a href="{plink Proposal:trash $proposal->getId()}">Smazat</a>
+        </td>
+
+        {/foreach}
+    </tbody>
+</table>
+

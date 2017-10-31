@@ -1,82 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
-    <meta name="viewport" content="width=device-width"/>
-    <link href="{$basePath}/css/bootstrap.min.css" rel="stylesheet">
-    <link href="{$basePath}/css/hlasys.css" rel="stylesheet">
-    <link href="{$basePath}/css/animate.min.css" rel="stylesheet"/>
-    <link href="{$basePath}/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-    <link href="{$basePath}/css/pe-icon-7-stroke.css" rel="stylesheet"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="{$basePath}/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet" href="{$basePath}/css/animate.min.css">
+    <link rel="stylesheet" href="{$basePath}/css/jquery.scrollbar.css">
+    <link rel="stylesheet" href="{$basePath}/css/fullcalendar.min.css">
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="{$basePath}/css/app.min.css">
     <title>{ifset title}{include title|stripHtml} | {/ifset}HlaSYS</title>
+
+    {block scripts}
+        <!-- Javascript -->
+        <!-- Vendors -->
+        <script src="{$basePath}/js/jquery.min.js"></script>
+        <script src="{$basePath}/js/tether.min.js"></script>
+        <script src="{$basePath}/js/bootstrap.min.js"></script>
+        <script src="{$basePath}/js/waves.min.js"></script>
+        <script src="{$basePath}/js/jquery.scrollbar.min.js"></script>
+        <script src="{$basePath}/js/jquery-scrollLock.min.js"></script>
+        <script src="{$basePath}/js/autosize.min.js"></script>
+
+        <!-- App functions and actions -->
+        <script src="{$basePath}/js/netteForms.js"></script>
+        <script src="{$basePath}/js/nette.ajax.js"></script>
+        <script src="{$basePath}/js/main.js"></script>
+        <script src="{$basePath}/js/app.min.js"></script>
+    {/block}
 </head>
-
-<body>
-<div class="wrapper">
-    <div class="sidebar" data-color="red" data-image="{$basePath}/img/sidebar-5.jpg">
-        <div class="sidebar-wrapper">
-            <div class="logo">
-                <a n:href="Homepage:default" class="simple-text">
-                    Hla<b>SYS</b>
-                </a>
-            </div> <!-- TODO: Vykreslit podruhé search, kvůli responsive-->
-            {control menu}
+<body data-ma-theme="green">
+<main class="main">
+    <div class="page-loader">
+        <div class="page-loader__spinner">
+            <svg viewBox="25 25 50 50">
+                <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+            </svg>
         </div>
     </div>
-    <div class="main-panel">
-        <nav class="navbar navbar-default navbar-fixed">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">{ifset title}{include title|stripHtml}{/ifset}</a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-left">
 
-                        <form class="navbar-form" role="search" style="height: 100%;margin: 21px 0px 0px 0px">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search" name="q"
-                                       style="color: black; ">
-                            </div>
-                        </form>
-                    </ul>
+    {control navBar}
+    {control sideBar}
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a n:href=Login:out>Odhlásit se</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <section class="content">
+        <div class="content__inner">
 
-        <div class="content">
-            <div class="container-fluid">
-                <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
-                {snippet content}
-                    {include content}
-                {/snippet}
-            </div>
+            <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+            {include content}
+
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
-{block scripts}
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="{$basePath}/js/bootstrap.min.js"></script>
-    <script src="{$basePath}/js/bootstrap-checkbox-radio-switch.js"></script>
-    <script src="{$basePath}/js/chartist.min.js"></script>
-    <script src="{$basePath}/js/bootstrap-notify.js"></script>
-    <script src="{$basePath}/js/light-bootstrap-dashboard.js"></script>
-    <script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
-{/block}
 </body>
 </html>
