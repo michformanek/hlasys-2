@@ -88,7 +88,7 @@ class MailService
             'header' => "Nový komentář u návrhu",
             'subject' => $subject,
             'comment' => $comment,
-            'url' => 'http://localhost/proposal/detail/' . $comment->getProposal()->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $comment->getProposal()->getId(),
         ];
         $this->sendCommentEmail($comment, $params);
     }
@@ -101,7 +101,7 @@ class MailService
             'header' => "Smazaný komentář u návrhu",
             'subject' => $subject,
             'comment' => $comment,
-            'url' => 'http://localhost/proposal/detail/' . $comment->getProposal()->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $comment->getProposal()->getId(),
         ];
         $this->sendCommentEmail($comment, $params);
     }
@@ -114,7 +114,7 @@ class MailService
             'header' => "Upravený  komentář u návrhu",
             'title' => $subject,
             'comment' => $comment,
-            'url' => 'http://localhost/proposal/detail/' . $comment->getProposal()->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $comment->getProposal()->getId(),
         ];
 
         $this->sendCommentEmail($comment, $params);
@@ -128,7 +128,7 @@ class MailService
             'header' => "Přidán hlas u návrhu",
             'title' => $subject,
             'vote' => $vote,
-            'url' => 'http://localhost/proposal/detail/' . $vote->getProposal()->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $vote->getProposal()->getId(),
         ];
 
         $this->sendVoteEmail($vote, $params);
@@ -142,7 +142,7 @@ class MailService
             'header' => "Smazaný komentář u návrhu",
             'subject' => $subject,
             'vote' => $vote,
-            'url' => 'http://localhost/proposal/detail/' . $vote->getProposal()->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $vote->getProposal()->getId(),
         ];
 
         $this->sendVoteEmail($vote, $params);
@@ -157,7 +157,7 @@ class MailService
             'header' => "Změna stavu u návrhu",
             'subject' => $subject,
             'text' => "Stav návrhu se změnil z " . $originalStatus->getName() . " na " . $newStatus->getName(),
-            'url' => 'http://localhost/proposal/detail/' . $proposal->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
 
         $this->sendStatusEmail($proposal, $params);
@@ -172,7 +172,7 @@ class MailService
             'subject' => $subject,
             'items' => $proposal->getItems(),
             'proposal' => $proposal,
-            'url' => 'http://localhost/proposal/detail/' . $proposal->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
 
         $this->sendProposalEmail($proposal, $params);
@@ -187,7 +187,7 @@ class MailService
             'subject' => $subject,
             'items' => $proposal->getItems(),
             'proposal' => $proposal,
-            'url' => 'http://localhost/proposal/detail/' . $proposal->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
 
         $this->sendProposalEmail($proposal, $params);
@@ -203,7 +203,7 @@ class MailService
             'subject' => $subject,
             'items' => $proposal->getItems(),
             'proposal' => $proposal,
-            'url' => 'http://localhost/proposal/detail/' . $proposal->getId(),
+            'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
 
         $this->sendProposalEmail($proposal, $params);
@@ -235,7 +235,7 @@ class MailService
 
     public function sendMessage(Message $message)
     {
-        $message->setFrom("HLASYS <michal.formanek@uhk.cz>");
+        $message->setFrom("HLASYS <mf21@seznam.cz>");
 
         try {
             $this->mailer->send($message);

@@ -3,6 +3,7 @@
 namespace App\Forms;
 
 
+use App\Service\ProposalService;
 use App\Service\VoteService;
 use Nette\Application\UI\Control;
 
@@ -19,14 +20,20 @@ class VoteForm extends Control
     private $voteService;
 
     public $onVote;
+    /**
+     * @var ProposalService
+     */
+    private $proposalService;
 
     public function __construct(
         $proposalId,
-        VoteService $voteService
+        VoteService $voteService,
+        ProposalService $proposalService
     )
     {
         $this->proposalId = $proposalId;
         $this->voteService = $voteService;
+        $this->proposalService = $proposalService;
     }
 
     public function render()
@@ -34,6 +41,7 @@ class VoteForm extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/VoteForm.latte');
         $template->vote = $this->voteService->getVoteOfCurrentUser($this->proposalId);
+        $template->proposal = $this->proposalService->findOne($this->proposalId);
         $template->render();
     }
 

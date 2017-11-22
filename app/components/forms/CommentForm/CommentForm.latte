@@ -1,6 +1,8 @@
+<hr />
 {form commentForm,class=>'ajax'}
     <div class="form-group">
-        {label text /} {input text, class=>"form-control"}
+        {input text, class=>"form-control textarea-autosize", rows=>5, placeholder=>"Sem zadejte text komentáře..."}
+        <i class="form-group__bar"></i>
     </div>
-    <p>{input send, class=>"btn btn-primary"}</p>
+    <p>{input send, class=>"btn btn-success"}</p>
 {/form}

@@ -34,12 +34,7 @@ class VoteResult
     private $negativeVotes;
 
     /**
-     * @ORM\Column(type="decimal", name="percents")
-     */
-    private $resultPercents;
-
-    /**
-     * @ORM\Column(type="decimal", name="voted")
+     * @ORM\Column(type="decimal", name="users_voted")
      */
     private $usersPercent;
 
@@ -68,8 +63,6 @@ class VoteResult
     {
         $this->proposalId = $proposalId;
     }
-
-
 
 
     /**
@@ -187,6 +180,21 @@ class VoteResult
     public function getUnvoted()
     {
         return $this->usersTotal - $this->positiveVotes - $this->negativeVotes;
+    }
+
+    public function didPass()
+    {
+        if($this->usersTotal == 0)
+            return false;
+        if ((($this->positiveVotes + $this->negativeVotes) / $this->usersTotal) < $this->usersToPass)
+            return false;
+        if ($this->positiveVotes / ($this->positiveVotes+$this->negativeVotes) < $this->percentsToPass)
+            return false;
+        return true;
+    }
+
+    public function someoneVoted(){
+        return ($this->positiveVotes + $this->negativeVotes) > 0 ? true : false;
     }
 
 }

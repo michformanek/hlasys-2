@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="user")
@@ -34,7 +35,7 @@ class User
 
     /**
      * One Group has Many Vote Types.
-     * @ORM\OneToMany(targetEntity="User2Group", mappedBy="user_id")
+     * @ORM\OneToMany(targetEntity="User2Group", mappedBy="user", fetch="EAGER")
      */
     private $user_group;
 

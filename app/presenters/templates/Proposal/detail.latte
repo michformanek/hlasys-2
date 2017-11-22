@@ -6,7 +6,9 @@
         <h1>{$proposal->getTitle()}</h1>
 
         <div class="actions">
-            <a n:href="Edit $proposal->getId()" class="actions__item zmdi zmdi-edit" title="Upravit"></a>
+            {if $canEdit}
+                <a n:href="Edit $proposal->getId()" class="actions__item zmdi zmdi-edit" title="Upravit"></a>
+            {/if}
             {snippet watchFormTop}
                 {control watchForm}
             {/snippet}
@@ -14,7 +16,8 @@
     </div>
 
     <div class="card-block">
-        {$parsedown->text($proposal->getDescription())|noescape}
+        {*{$parsedown->text($proposal->getDescription())|noescape}*}
+        {$proposal->getDescription()|noescape}
 
         {snippet itemTable}
             {control itemTable}
@@ -26,6 +29,11 @@
         {/snippet}
         <br>
 
+        <div class="card-block" >
+            {snippet voteTable}
+                {control voteTable}
+            {/snippet}
+        </div>
 
         <div class="tab-container">
             <ul class="nav nav-tabs nav-fill" role="tablist">
@@ -34,9 +42,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#logs" role="tab">Logy</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#votes" role="tab">Hlasy</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#watches" role="tab">Watche</a>
@@ -56,11 +61,6 @@
                         {snippet logTable}
                             {control logTable}
                         {/snippet}
-                </div>
-                <div class="tab-pane fade" id="votes" role="tabpanel">
-                    {snippet voteTable}
-                        {control voteTable}
-                    {/snippet}
                 </div>
                 <div class="tab-pane fade" id="watches" role="tabpanel">
                         {snippet watchTable}

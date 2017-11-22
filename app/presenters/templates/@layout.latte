@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="utf-8">
+    <meta charset="windows-1250">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Vendor styles -->
@@ -12,29 +12,13 @@
 
     <!-- App styles -->
     <link rel="stylesheet" href="{$basePath}/css/app.min.css">
+    <link rel="stylesheet" href="{$basePath}/css/hlasys.css">
     <title>{ifset title}{include title|stripHtml} | {/ifset}HlaSYS</title>
 
-    {block scripts}
-        <!-- Javascript -->
-        <!-- Vendors -->
-        <script src="{$basePath}/js/jquery.min.js"></script>
-        <script src="{$basePath}/js/tether.min.js"></script>
-        <script src="{$basePath}/js/bootstrap.min.js"></script>
-        <script src="{$basePath}/js/waves.min.js"></script>
-        <script src="{$basePath}/js/jquery.scrollbar.min.js"></script>
-        <script src="{$basePath}/js/jquery-scrollLock.min.js"></script>
-        <script src="{$basePath}/js/autosize.min.js"></script>
-
-        <!-- App functions and actions -->
-        <script src="{$basePath}/js/netteForms.js"></script>
-        <script src="{$basePath}/js/nette.ajax.js"></script>
-        <script src="{$basePath}/js/main.js"></script>
-        <script src="{$basePath}/js/app.min.js"></script>
-    {/block}
 </head>
 <body data-ma-theme="green">
 <main class="main">
-    <div class="page-loader">
+    <div class="page-loader" id="ajax-spinner" style="display:none;">
         <div class="page-loader__spinner">
             <svg viewBox="25 25 50 50">
                 <circle cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
@@ -54,6 +38,23 @@
         </div>
     </section>
 </main>
+{block scripts}
+    <!-- Javascript -->
+    <!-- Vendors -->
+    <script src="{$basePath}/js/jquery.min.js"></script>
+    <script src="{$basePath}/js/tether.min.js"></script>
+    <script src="{$basePath}/js/bootstrap.min.js"></script>
+    <script src="{$basePath}/js/waves.min.js"></script>
+    <script src="{$basePath}/js/jquery.scrollbar.min.js"></script>
+    <script src="{$basePath}/js/jquery-scrollLock.min.js"></script>
+    <script src="{$basePath}/js/autosize.min.js"></script>
+    <script src="{$basePath}/js/app.min.js"></script>
 
+    <!-- App functions and actions -->
+    <script src="{$basePath}/js/netteForms.js"></script>
+    <script src="{$basePath}/js/nette.ajax.js"></script>
+    <script src="{$basePath}/js/spinner.js"></script>
+    <script src="{$basePath}/js/main.js"></script>
+{/block}
 </body>
 </html>

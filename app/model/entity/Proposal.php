@@ -355,4 +355,15 @@ class Proposal
         $this->trash = $trash;
     }
 
+    public function didUserVote(User $user)
+    {
+        foreach ($this->votes as $vote) {
+            if ($vote->getUser() === $user) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

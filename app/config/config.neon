@@ -19,14 +19,13 @@ extensions:
     cronner: stekycz\Cronner\DI\CronnerExtension
     replicator: Kdyby\Replicator\DI\ReplicatorExtension
     restful: Drahak\Restful\DI\RestfulExtension
+    visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension
 
 mail:
     smtp: true
-    host: smtp.office365.com
-    port: 587
-    username: "uhk.cz\formami5"
-    password: "General3"
-
+    host: smtp.seznam.cz
+    username: mf21@seznam.cz
+    password: XH8azo7I
 restful:
 	convention: 'snake_case'
 	cacheDir: '%tempDir%/cache'
@@ -34,6 +33,7 @@ restful:
 	prettyPrintKey: 'pretty'
 
 services:
+	authenticator: MujAuthenticator
 	- App\Service\CommentService
 	- App\Service\CronService
 	- App\Service\GroupService
@@ -70,6 +70,10 @@ services:
 	    class: App\Repository\ProposalRepository
 	    tags:
 	        doctrine.repositoryEntity: App\Model\Proposal
+	proposalVotersRepository:
+	    class: App\Repository\ProposalVotersRepository
+	    tags:
+	        doctrine.repositoryEntity: App\Model\ProposalVoter
 	userRepository:
 	    class: App\Repository\UserRepository
 	    tags:
@@ -102,7 +106,6 @@ services:
 	    class: App\Repository\CommentRepository
 	    tags:
 	        doctrine.repositoryEntity: App\Model\Comment
-	authenticator: Nette\Security\SimpleAuthenticator([1: 1234])
 	router: App\RouterFactory::createRouter
 
 doctrine:

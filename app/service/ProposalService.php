@@ -6,12 +6,16 @@ namespace App\Service;
 use App\Model\Group;
 use App\Model\Item;
 use App\Model\Proposal;
+use App\Model\ProposalVoter;
 use App\Model\Status;
 use App\Model\User;
+use App\Model\VoteResult;
 use App\Model\VoteType;
 use App\Model\Watch;
 use App\Repository\ProposalRepository;
+use App\Repository\ProposalVotersRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Nette\DateTime;
 
 class ProposalService
@@ -41,6 +45,10 @@ class ProposalService
      * @var LogService
      */
     private $logService;
+    /**
+     * @var ProposalVotersRepository
+     */
+    private $proposalVotersRepository;
 
     /**
      * ProposalService constructor.
@@ -49,6 +57,7 @@ class ProposalService
      * @param VoteTypeService $voteTypeService
      * @param MailService $mailService
      * @param LogService $logService
+     * @param ProposalVotersRepository $proposalVotersRepository
      * @param \Nette\Security\User $user
      */
     public function __construct(
@@ -57,6 +66,7 @@ class ProposalService
         VoteTypeService $voteTypeService,
         MailService $mailService,
         LogService $logService,
+        ProposalVotersRepository $proposalVotersRepository,
         \Nette\Security\User $user
     )
     {
@@ -66,6 +76,7 @@ class ProposalService
         $this->voteTypeService = $voteTypeService;
         $this->mailService = $mailService;
         $this->logService = $logService;
+        $this->proposalVotersRepository = $proposalVotersRepository;
     }
 
     public function findAll()
@@ -154,7 +165,7 @@ class ProposalService
         $voteType = $this->voteTypeService->find($values['vote_type_id']);
 
         $proposal->setVoteType($voteType);
-        $this->changeStatus($proposal,$status);
+        $this->changeStatus($proposal, $status);
         $proposal->setTitle($values['title']);
         $proposal->setDescription($values['description']);
         $proposal->setItems($this->createItems($values['items']));
@@ -227,5 +238,110 @@ class ProposalService
         $user = $this->entityManager->getReference(User::class, $this->user->getId());
         $watch->setUser($user);
         return [$watch];
+    }
+
+    public function findUsingPaginator($itemsPerPage, $offset)
+    {
+        return $this->proposalRepository->findBy([], null, $itemsPerPage, $offset);
+    }
+
+    public function findMineUsingPaginator($itemsPerPage, $offset)
+    {
+        $userReference = $this->entityManager->getReference(User::class, $this->user->getId());
+        return $this->proposalRepository->findBy(['user' => $userReference], null, $itemsPerPage, $offset);
+
+    }
+
+    public function getProposalsCount()
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(proposal.id)');
+        $qb->from('App\Model\Proposal', 'proposal');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getMineProposalsCount()
+    {
+        $author = $this->entityManager->getReference(User::class, $this->user->getId());
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(proposal.id)');
+        $qb->where('proposal.user =  :user');
+        $qb->setParameter('user', $author);
+        $qb->from('App\Model\Proposal', 'proposal');
+
+        return $qb->getQuery()->getSingleScalarResult();
+
+    }
+
+    public function getDeletedProposalsCount()
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(proposal.id)');
+        $qb->where('proposal.trash = true');
+        $qb->from('App\Model\Proposal', 'proposal');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function findDeletedUsingPaginator($itemsPerPage, $offset)
+    {
+        return $this->proposalRepository->findBy(['trash' => true], null, $itemsPerPage, $offset);
+
+    }
+
+    public function findVVUsingPaginator($itemsPerPage, $offset)
+    {
+        $group = $this->entityManager->getReference(Group::class, 1);
+        return $this->proposalRepository->findBy(['group' => $group, 'trash' => false], null, $itemsPerPage, $offset);
+    }
+
+    public function findSOUsingPaginator($itemsPerPage, $offset)
+    {
+        $group = $this->entityManager->getReference(Group::class, 2);
+        return $this->proposalRepository->findBy(['group' => $group, 'trash' => false], null, $itemsPerPage, $offset);
+    }
+
+    public function getVVProposalsCount()
+    {
+        $group = $this->entityManager->getReference(Group::class, 1);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(proposal.id)');
+        $qb->where('proposal.group =  :group');
+        $qb->andWhere('proposal.trash = false');
+        $qb->setParameter('group', $group);
+        $qb->from('App\Model\Proposal', 'proposal');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getSOProposalsCount()
+    {
+        $group = $this->entityManager->getReference(Group::class, 2);
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('count(proposal.id)');
+        $qb->where('proposal.group =  :group');
+        $qb->andWhere('proposal.trash = false');
+        $qb->setParameter('group', $group);
+        $qb->from('App\Model\Proposal', 'proposal');
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getUsersWhoDidNotVote(Proposal $proposal)
+    {
+        $voters = $this->proposalVotersRepository->findBy(['proposal' => $proposal]);
+        $users = array();
+        foreach ($voters as $voter) {
+            $users[] = $voter->getUser();
+        }
+
+        foreach ($proposal->getVotes() as $vote) {
+            foreach ($users as $index => $user) {
+                if ($vote->getUser()->getId() == $user->getId()) {
+                    unset($users[$index]);
+                }
+            }
+
+        }
+
+        return $users;
     }
 }

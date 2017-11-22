@@ -22,6 +22,8 @@ use App\Table\IVoteTableFactory;
 use App\Table\IWatchTableFactory;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Multiplier;
+use IPub\VisualPaginator\Components as VisualPaginator;
+use Tracy\Debugger;
 
 class ProposalPresenter extends SecuredPresenter
 {
@@ -77,7 +79,7 @@ class ProposalPresenter extends SecuredPresenter
      */
     private $voteTypeService;
     /**
-    /**
+     * /**
      * @var IItemTableFactory
      */
     private $itemTableFactory;
@@ -127,19 +129,54 @@ class ProposalPresenter extends SecuredPresenter
 
     public function renderDefault()
     {
-        $this->template->proposals = $this->proposalService->findAll();
-
+        $visualPaginator = $this['paginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $count = $this->proposalService->getProposalsCount();
+        $paginator->itemCount = $count;
+        $proposals = $this->proposalService->findUsingPaginator($paginator->itemsPerPage, $paginator->offset);
+        $this->template->proposals = $proposals;
     }
 
     public function renderDeleted()
     {
-        $this->template->proposals = $this->proposalService->findDeleted();
+        $visualPaginator = $this['paginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $count = $this->proposalService->getDeletedProposalsCount();
+        $paginator->itemCount = $count;
+        $proposals = $this->proposalService->findDeletedUsingPaginator($paginator->itemsPerPage, $paginator->offset);
+        $this->template->proposals = $proposals;
     }
 
     public function renderMine()
     {
-        $this->template->proposals = $this->proposalService->findMine();
+        $visualPaginator = $this['paginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $count = $this->proposalService->getMineProposalsCount();
+        $paginator->itemCount = $count;
+        $proposals = $this->proposalService->findMineUsingPaginator($paginator->itemsPerPage, $paginator->offset);
+        $this->template->proposals = $proposals;
     }
+
+    public function renderVv()
+    {
+        $visualPaginator = $this['paginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $count = $this->proposalService->getVVProposalsCount();
+        $paginator->itemCount = $count;
+        $proposals = $this->proposalService->findVVUsingPaginator($paginator->itemsPerPage, $paginator->offset);
+        $this->template->proposals = $proposals;
+    }
+
+    public function renderSo()
+    {
+        $visualPaginator = $this['paginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $count = $this->proposalService->getSOProposalsCount();
+        $paginator->itemCount = $count;
+        $proposals = $this->proposalService->findSOUsingPaginator($paginator->itemsPerPage, $paginator->offset);
+        $this->template->proposals = $proposals;
+    }
+
 
     public function renderCreate()
     {
@@ -160,12 +197,16 @@ class ProposalPresenter extends SecuredPresenter
         }
         $this->proposal = $proposal;
         $this->template->proposal = $this->proposal;
-        $this->template->parsedown = new \Parsedown();
+//        $this->template->parsedown = new \Parsedown();
+        $isAllowed = $this->user->isInRole('VV') || $this->user->isInRole('admin');
+        $this->template->canEdit = ($this->nehlasovano($proposal) && $this->user->isInRole($proposal->getGroup()->getName()))
+            || ($isAllowed && $this->nehlasovano($proposal));
     }
 
     public function actionTrash($id)
     {
-
+        $this->proposalService->deleteProposal($id);
+        $this->redrawControl('proposalTable');
     }
 
     public function actionRemoveComment($commentId)
@@ -188,7 +229,8 @@ class ProposalPresenter extends SecuredPresenter
     public function createComponentVoteTable()
     {
         $votes = $this->proposal->getVotes();
-        return $this->voteTableFactory->create($votes);
+        $didNotVote = $this->proposalService->getUsersWhoDidNotVote($this->proposal);
+        return $this->voteTableFactory->create($votes, $didNotVote);
     }
 
     public function createComponentWatchTable()
@@ -273,6 +315,29 @@ class ProposalPresenter extends SecuredPresenter
 //        $control->onProposalSave[] = function () {
 //
 //        };
+        return $control;
+    }
+
+    /**
+     * @param $proposal
+     * @return bool
+     */
+    public function nehlasovano($proposal)
+    {
+        return count($proposal->getVotes()) < 1;
+    }
+
+    /**
+     * Create proposals paginator
+     *
+     * @return VisualPaginator\Control
+     */
+    protected function createComponentPaginator()
+    {
+        $control = new VisualPaginator\Control;
+        $control->setTemplateFile(__DIR__ . '/templates/paginator.latte');
+        $control->disableAjax();
+        $control->getPaginator()->itemsPerPage = 20;
         return $control;
     }
 

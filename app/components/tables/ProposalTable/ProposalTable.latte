@@ -10,16 +10,27 @@
         <th>Vytvořil</th>
         <th>Od</th>
         <th>Do</th>
+        {if $user->isInRole('admin') || $user->isInRole('VV')}
         <th>Akce</th>
+        {/if}
     </tr>
     </thead>
     <tbody>
 
     {foreach $proposals as $proposal}
+    {if $proposal->getVoteResult()->didPass()}
+    <tr class="table-success" style="color: white;">
+        {elseif $proposal->getVoteResult()->someoneVoted() && !$proposal->getVoteResult()->didPass()}
+    <tr class="table-danger" style="color: white;">
+        {elseif !$proposal->didUserVote($userReference)}
+    <tr class="table-active">
+        {else}
     <tr>
+        {/if}
+
         <td>{$proposal->getId()}</td>
         <td>
-            <a href="{plink Proposal:detail $proposal->getId()}">{$proposal->getTitle()} </a>
+            <a style="color: inherit" href="{plink Proposal:detail $proposal->getId()}">{$proposal->getTitle()} </a>
         </td>
         <td>
 
@@ -36,9 +47,11 @@
         <td>{$proposal->getUser()->getUsername()}</td>
         <td>{$proposal->getDateStart() |date:'%d.%m.%Y'}</td>
         <td>{$proposal->getDateEnd() |date:'%d.%m.%Y'}</td>
+        {if $user->isInRole('admin') || $user->isInRole('VV')}
         <td>
-            <a href="{plink Proposal:trash $proposal->getId()}">Smazat</a>
+            <a style="color: inherit" class="ajax" href="{plink Proposal:trash $proposal->getId()}">Smazat</a>
         </td>
+        {/if}
 
         {/foreach}
     </tbody>

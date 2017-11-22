@@ -2,7 +2,7 @@ parameters:
 
 
 doctrine:
-	user: adminuser@hlasys-db
-	password: General3
+	user: root
+	password:
 	dbname: hlasys
-	host: hlasys-db.mysql.database.azure.com
+	host: localhost

@@ -160,9 +160,9 @@ class ReplicatorFormControl extends Control
         $proposal->setItems($items);
         $proposal->setGroup($group);
 
-        dump($proposal);
+//        dump($proposal);
         //dump($values);
-        exit();
+//        exit();
         $this->proposalService->save($proposal);
     }
 

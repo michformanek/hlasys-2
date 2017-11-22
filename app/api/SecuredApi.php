@@ -12,7 +12,7 @@ class SecuredApi extends ResourcePresenter
     {
         parent::startup();
         if (!$this->user->isLoggedIn()) {
-            $this->user->login('1', '1234');
+            $this->user->login();
         }
     }
 

@@ -1,27 +1,29 @@
 <aside class="sidebar">
     <div class="scrollbar-inner">
         <div class="user">
-            <div class="user__info" data-toggle="dropdown">
+            <div class="user__info">
                 <div>
-                    <div class="user__name">username</div>
-                    <div class="user__email">email</div>
+                    <div class="user__name">{$user->getIdentity()->username}</div>
+                    <div class="user__email">{$user->getIdentity()->email}</div>
                 </div>
-            </div>
-
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="">Nastavení</a>
-                <a class="dropdown-item" href="">Odhlásit se</a>
             </div>
         </div>
 
         <ul class="navigation">
             <li><a href="{plink Homepage:default}">Dashboard</a></li>
             <li><a href="{plink Proposal:default}">Přehled návrhů</a></li>
+            <li><a href="{plink Proposal:vv}">Přehled VV</a></li>
+            <li><a href="{plink Proposal:so}">Přehled SO</a></li>
             <li><a href="{plink Proposal:mine}">Moje návrhy</a></li>
-            <li><a href="{plink Proposal:deleted}">Koš</a></li>
+            {if $user->isInRole('admin') || $user->isInRole('VV')}
+                <li><a href="{plink Proposal:deleted}">Koš</a></li>
+            {/if}
             <li><a href="{plink Proposal:create}">Přidat hlasování</a></li>
+            <li><a href="../eshop">Přidat z eshopu</a></li>
             <li><a href="{plink Help:default}">Nápověda</a></li>
-            <li><a href="{plink Settings:default}">Nastavení</a></li>
+            {if $user->isInRole('admin')}
+                <li><a href="{plink Settings:default}">Nastavení</a></li>
+            {/if}
         </ul>
     </div>
 </aside>

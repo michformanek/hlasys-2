@@ -35,7 +35,7 @@ class CommentForm extends Control
         $form->addTextArea('text', 'Text komentáře')
             ->setRequired('Vyplňte, prosím, text komentáře.');
 
-        $form->addSubmit('send', 'Uložit');
+        $form->addSubmit('send', 'Přidat komentář');
 
         $form->onSuccess[] = [$this, 'success'];
         return $form;
