@@ -2,7 +2,7 @@ parameters:
 
 
 doctrine:
-	user: root
-	password:
+	user: adminuser@hlasdb
+	password: General3
 	dbname: hlasys
-	host: localhost
+	host: hlasdb.database.windows.net

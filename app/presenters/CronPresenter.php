@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mformanek
- * Date: 2.4.17
- * Time: 12:53
- */
 
 namespace App\Presenters;
 
