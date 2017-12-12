@@ -27,6 +27,8 @@ class ProposalTable extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/ProposalTable.latte');
         $template->proposals = $proposals;
+//        dump($proposals);
+//        exit;
         $template->userReference = $this->userService->getUserReference();
         $template->render();
     }

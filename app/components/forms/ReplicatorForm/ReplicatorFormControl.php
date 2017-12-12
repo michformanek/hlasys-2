@@ -4,6 +4,7 @@ namespace App\Forms;
 
 use App\Model\Item;
 use App\Model\Proposal;
+use App\Model\Status;
 use App\Model\User;
 use App\Service\ItemService;
 use App\Service\ProposalService;
@@ -152,7 +153,7 @@ class ReplicatorFormControl extends Control
         $proposal->setDateEnd($dateEnd);
         $proposal->setUser($this->entityManager->getReference(User::class, $userId));
         $proposal->setTrash(false);
-        //fixme status
+        $proposal->setStatus($this->entityManager->getReference(Status::class, 1));
         if ($values['id'] != "") {
             $proposal->setDateStart($values['dateStart']);
             $proposal->setDateEnd($values['dateEnd']);

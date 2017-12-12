@@ -45,8 +45,8 @@
         <td>{$proposal->getStatus()->getName()}</td>
         <td>{$proposal->getGroup()->getName()}</td>
         <td>{$proposal->getUser()->getUsername()}</td>
-        <td>{$proposal->getDateStart() |date:'%d.%m.%Y'}</td>
-        <td>{$proposal->getDateEnd() |date:'%d.%m.%Y'}</td>
+        <td>{$proposal->getDateStart()->format('d.m.Y')}</td>
+        <td>{$proposal->getDateEnd()->format('d.m.Y')} </td>
         {if $user->isInRole('admin') || $user->isInRole('VV')}
         <td>
             <a style="color: inherit" class="ajax" href="{plink Proposal:trash $proposal->getId()}">Smazat</a>
