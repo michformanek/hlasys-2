@@ -242,13 +242,13 @@ class ProposalService
 
     public function findUsingPaginator($itemsPerPage, $offset)
     {
-        return $this->proposalRepository->findBy([], null, $itemsPerPage, $offset);
+        return $this->proposalRepository->findBy([],  ['dateStart' => 'DESC'], $itemsPerPage, $offset);
     }
 
     public function findMineUsingPaginator($itemsPerPage, $offset)
     {
         $userReference = $this->entityManager->getReference(User::class, $this->user->getId());
-        return $this->proposalRepository->findBy(['user' => $userReference], null, $itemsPerPage, $offset);
+        return $this->proposalRepository->findBy(['user' => $userReference],  ['dateStart' => 'DESC'], $itemsPerPage, $offset);
 
     }
 
@@ -285,20 +285,20 @@ class ProposalService
 
     public function findDeletedUsingPaginator($itemsPerPage, $offset)
     {
-        return $this->proposalRepository->findBy(['trash' => true], null, $itemsPerPage, $offset);
+        return $this->proposalRepository->findBy(['trash' => true],  ['dateStart' => 'DESC'], $itemsPerPage, $offset);
 
     }
 
     public function findVVUsingPaginator($itemsPerPage, $offset)
     {
         $group = $this->entityManager->getReference(Group::class, 1);
-        return $this->proposalRepository->findBy(['group' => $group, 'trash' => false], null, $itemsPerPage, $offset);
+        return $this->proposalRepository->findBy(['group' => $group, 'trash' => false], ['dateStart' => 'DESC'], $itemsPerPage, $offset);
     }
 
     public function findSOUsingPaginator($itemsPerPage, $offset)
     {
         $group = $this->entityManager->getReference(Group::class, 2);
-        return $this->proposalRepository->findBy(['group' => $group, 'trash' => false], null, $itemsPerPage, $offset);
+        return $this->proposalRepository->findBy(['group' => $group, 'trash' => false], ['dateStart' => 'DESC'], $itemsPerPage, $offset);
     }
 
     public function getVVProposalsCount()
