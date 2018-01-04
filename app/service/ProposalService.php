@@ -344,4 +344,23 @@ class ProposalService
 
         return $users;
     }
+
+    public function search($query)
+    {
+        $queryResults = $this->proposalRepository->createQueryBuilder('p')
+            ->addSelect("MATCH_AGAINST (p.title,p.description, :searchterm 'IN NATURAL MODE') as score")
+            ->add('where', 'MATCH_AGAINST(p.title,p.description, :searchterm) > 0.8')
+            ->setParameter('searchterm', $query)
+            ->orderBy('score', 'desc')
+            ->getQuery()
+            ->getResult();
+
+        $result = array();
+        foreach ($queryResults as $queryResult){
+            $result[] = $queryResult[0];
+        }
+        return $result;
+    }
+
+
 }

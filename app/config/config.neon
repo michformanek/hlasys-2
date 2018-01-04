@@ -114,3 +114,6 @@ doctrine:
     dbname: hlasys
     metadata:
         App\Model: %appDir%
+    dql:
+        string:
+             MATCH_AGAINST: App\Extentions\MatchAgainst

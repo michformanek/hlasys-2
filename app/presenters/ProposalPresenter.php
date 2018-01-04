@@ -177,6 +177,14 @@ class ProposalPresenter extends SecuredPresenter
         $this->template->proposals = $proposals;
     }
 
+    public function renderSearch($query){
+        $visualPaginator = $this['paginator'];
+        $paginator = $visualPaginator->getPaginator();
+        $results = $this->proposalService->search($query);
+        $paginator->itemCount = count($results);
+        $this->template->proposals = $results;
+        $this->template->query = $query;
+    }
 
     public function renderCreate()
     {
