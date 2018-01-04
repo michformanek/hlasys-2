@@ -342,7 +342,7 @@ class ProposalService
 
         }
 
-        return $users;
+        return array_values($users);
     }
 
     public function search($query)
