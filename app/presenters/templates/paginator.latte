@@ -1,28 +1,28 @@
 {if $paginator->pageCount > 1}
-    <nav>
-    <ul class="pagination justify-content-center">
-        {if $paginator->isFirst()}
-            <li class="page-item pagination-prev disabled"><a class="page-link" href="#"></a></li>
-        {else}
-            <li class="page-item pagination-prev"><a href="{link $handle, 'page' => $paginator->page - 1}" rel="prev" n:class="$useAjax ? ajax, page-link"></a></li>
-        {/if}
-
-        {foreach $steps as $step}
-            {if $step == $paginator->page}
-                <li class="page-item active"><a class="page-link" href="#">{$step}</a></li>
+    <nav style="margin-top: 20px">
+        <ul class="pagination justify-content-center">
+            {if $paginator->isFirst()}
+                <li class="page-item pagination-prev disabled"><a class="page-link" href="#"></a></li>
             {else}
-                <li class="page-item"><a href="{link $handle, 'page' => $step}" n:class="$useAjax ? ajax, page-link">{$step}</a></li>
+                <li class="page-item pagination-prev"><a href="{link $handle, 'page' => $paginator->page - 1}" rel="next" n:class="$useAjax ? ajax, page-link"></a></li>
             {/if}
-            {if $iterator->nextValue > $step + 1}
-                <li class="page-item disabled"><a class="page-link" href="#">{$step}</a></li>
-            {/if}
-        {/foreach}
 
-        {if $paginator->isLast()}
-            <li class="page-item pagination-next disabled"><a class="page-link" href="#"></a></li>
-        {else}
-            <li class="page-item pagination-next"><a href="{link $handle, 'page' => $paginator->page + 1}" rel="next" n:class="$useAjax ? ajax, page-link"></a></li>
-        {/if}
-    </ul>
-</nav>
+            {foreach $steps as $step}
+                {if $step == $paginator->page}
+                    <li class="page-item active"><a class="page-link" href="#">{$step}</a></li>
+                {else}
+                    <li class="page-item"><a href="{link $handle, 'page' => $step}" n:class="$useAjax ? ajax, page-link">{$step}</a></li>
+                {/if}
+                {if $iterator->nextValue > $step + 1}
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                {/if}
+            {/foreach}
+
+            {if $paginator->isLast()}
+                <li class="page-item pagination-next disabled"><a class="page-link" href="#"></a></li>
+            {else}
+                <li class="page-item pagination-next"><a href="{link $handle, 'page' => $paginator->page + 1}" rel="next" n:class="$useAjax ? ajax, page-link"></a></li>
+            {/if}
+        </ul>
+    </nav>
 {/if}
