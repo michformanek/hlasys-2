@@ -28,11 +28,11 @@ class VoteTable extends Control
         $template = $this->template;
         $template->setFile(__DIR__ . '/VoteTable.latte');
         $positiveVotes = $this->getPositiveVotes($this->votes);
-        $template->positiveVotes = $positiveVotes;
         $negativeVotes = $this->getNegativeVotes($this->votes);
-        $template->negativeVotes = $negativeVotes;
-        $template->didNotVote = $this->didNotVote;
-        $template->rowCount = max(count($this->didNotVote),count($positiveVotes),count($negativeVotes));
+        $template->positiveCount = count($positiveVotes);
+        $template->negativeCount = count($negativeVotes);
+        $template->didNotVoteCount = count($this->didNotVote);
+        $template->votes = array_merge($positiveVotes,$negativeVotes,$this->didNotVote);
         $template->render();
     }
 
