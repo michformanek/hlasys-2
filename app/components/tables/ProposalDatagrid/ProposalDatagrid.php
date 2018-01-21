@@ -23,7 +23,7 @@ class ProposalDatagrid extends Control
      */
     private $datasource;
 
-    public function __construct(EntityManager $entityManager, UserService $userService,QueryBuilder $datasource)
+    public function __construct(EntityManager $entityManager, UserService $userService, QueryBuilder $datasource)
     {
         $this->entityManager = $entityManager;
         $this->userService = $userService;
@@ -62,7 +62,12 @@ class ProposalDatagrid extends Control
         $grid->addColumnText('group.name', 'Rozhoduje');
         $grid->addColumnText('user.username', 'Vytvořil');
         $grid->addColumnDateTime('dateStart', 'Od');
-        $grid->addColumnDateTime('dateEnd', 'Do');
+        $grid->addColumnDateTime('dateEnd', 'Do')->setRenderer(
+            function ($item) {
+                return ' - ';
+            }, function ($item) {
+            return (bool)($item->getDateEnd() != null);
+        });
 
         $grid->setRowCallback(function (Proposal $proposal, $tr) {
             $voteResult = $proposal->getVoteResult();
