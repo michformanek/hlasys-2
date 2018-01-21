@@ -1,18 +1,20 @@
 {foreach $votes as $vote}
-    {first}<table class="table-sm text-center col-md-12">
+    {first}
+        <table class="table-sm text-center col-md-12">
         <tbody>
     {/first}
-{first 5}
-<tr>{/first}
-    {if $iterator->getCounter() - 1 < $positiveCount}
-        <td class="table-success" style="color:#fff;">{$vote->getUsername()}</td>
-    {elseif $iterator->getCounter() - 1 < $negativeCount + $positiveCount}
-        <td class="table-danger" style="color:#fff;">{$vote->getUsername()}</td>
-    {elseif $iterator->getCounter() - 1  < $negativeCount + $positiveCount + $didNotVoteCount}
-        <td class="table-active"
-            style="color:#000;">{$vote->getUsername()}</td>
-    {/if}
-{last 5}</tr>{/last}
-    {last}    </tbody>
-        </table>{/last}
+    {first 5}<tr>{/first}
+        {if $iterator->getCounter() - 1 < $positiveCount}
+            <td class="table-success" style="color:#fff;">{$vote->getUsername()}</td>
+        {elseif $iterator->getCounter() - 1 < $negativeCount + $positiveCount}
+            <td class="table-danger" style="color:#fff;">{$vote->getUsername()}</td>
+        {elseif $iterator->getCounter() - 1  < $negativeCount + $positiveCount + $didNotVoteCount}
+            <td class="table-active"
+                style="color:#000;">{$vote->getUsername()}</td>
+        {/if}
+    {last 5}</tr>{/last}
+    {last}
+        </tbody>
+        </table>
+    {/last}
 {/foreach}
