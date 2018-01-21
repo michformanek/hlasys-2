@@ -63,6 +63,7 @@ services:
 	- App\Table\IItemTableFactory
 	- App\Table\ILogTableFactory
 	- App\Table\IProposalTableFactory
+	- App\Table\IProposalDatagridFactory
 	- App\Table\IVoteTableFactory
 	- App\Table\IWatchTableFactory
 

@@ -113,13 +113,6 @@ class ReplicatorFormControl extends Control
         return $form;
     }
 
-    public function handleDescriptionChange($value)
-    {
-        $parsedown = new \Parsedown();
-        $this->description = $parsedown->text($value);
-        $this->redrawControl('markdown');
-    }
-
     public function success($form, $values)
     {
         $proposal = new Proposal();

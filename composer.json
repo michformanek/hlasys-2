@@ -27,7 +27,8 @@
 		"kdyby/forms-replicator": "@dev",
 		"webchemistry/forms-multiplier": "^2.0",
 		"drahak/restful": "@dev",
-		"ipub/visual-paginator": "@dev"
+		"ipub/visual-paginator": "@dev",
+		"ublaboo/datagrid": "^5.5"
 	},
 	"require-dev": {
 		"nette/tester": "^1.6"

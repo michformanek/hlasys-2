@@ -13,6 +13,10 @@
     <!-- App styles -->
     <link rel="stylesheet" href="{$basePath}/css/app.min.css">
     <link rel="stylesheet" href="{$basePath}/css/hlasys.css">
+    <link rel="stylesheet" href="{$basePath}/css/datagrid.min.css">
+    <link rel="stylesheet" href="{$basePath}/css/happy.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+
     <title>{ifset title}{include title|stripHtml} | {/ifset}HlaSYS</title>
 
 </head>
@@ -49,12 +53,19 @@
     <script src="{$basePath}/js/jquery-scrollLock.min.js"></script>
     <script src="{$basePath}/js/autosize.min.js"></script>
     <script src="{$basePath}/js/app.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
     <!-- App functions and actions -->
     <script src="{$basePath}/js/netteForms.js"></script>
     <script src="{$basePath}/js/nette.ajax.js"></script>
     <script src="{$basePath}/js/spinner.js"></script>
     <script src="{$basePath}/js/main.js"></script>
+
+    <script src="{$basePath}/js/happy.min.js"></script>
+    <script src="{$basePath}/js/datagrid.min.js"></script>
+    <script src="{$basePath}/js/datagrid-instant-url-refresh.min.js"></script>
+    <script src="{$basePath}/js/datagrid-spinners.min.js"></script>
+
 {/block}
 </body>
 </html>

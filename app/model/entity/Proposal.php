@@ -46,7 +46,7 @@ class Proposal
 
     /**
      * One Proposal has Many Items.
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="proposal",cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Item",fetch="EAGER",mappedBy="proposal",cascade={"all"})
      */
     private $items;
 
@@ -58,7 +58,7 @@ class Proposal
 
     /**
      * One Proposal has Many Votes.
-     * @ORM\OneToMany(targetEntity="Vote", mappedBy="proposal",cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Vote",fetch="EAGER", mappedBy="proposal",cascade={"all"})
      */
     private $votes;
 
@@ -107,7 +107,7 @@ class Proposal
     private $voteResult;
 
     /**
-     * @return mixed
+     * @return VoteResult
      */
     public function getVoteResult()
     {

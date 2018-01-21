@@ -34,19 +34,10 @@
                         <i class="form-group__bar"></i>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group">
                         {label description /}
-                        {input description, class=>"form-control textarea-autosize", id=>"description", style=>"overflow: hidden; word-wrap: break-word; height: 50px;"}
-                        <i class="form-group__bar"></i>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        {label description /}
-                        {snippet markdown}
-                            {$description|noescape}
-                        {/snippet}
+                        {input description, class=>"form-control textarea-autosize", id=>"description-textarea"}
                         <i class="form-group__bar"></i>
                     </div>
                 </div>
@@ -58,15 +49,3 @@
         {/form}
     </div>
 </div>
-
-<script type="text/javascript">
-    $('#description').on('keyup', function () {
-        $.nette.ajax({
-            type: 'GET',
-            url: {link descriptionChange},
-            data: { {$control->getParameterId('value')}:
-        $(this).val()
-    }
-    })
-    })
-</script>
