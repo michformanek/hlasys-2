@@ -8,8 +8,7 @@ use App\Model\Log;
 use App\Model\Proposal;
 use App\Model\Status;
 use App\Model\Vote;
-use App\Repository\LogRepository;
-use Doctrine\ORM\EntityManager;
+use Kdyby\Doctrine\EntityManager;
 use Nette\Security\User;
 
 class LogService
@@ -18,24 +17,24 @@ class LogService
      * @var User
      */
     private $user;
-    /**
-     * @var LogRepository
-     */
-    private $logRepository;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
 
+    private $entityManager;
+    private $logRepository;
+
+
+    /**
+     * LogService constructor.
+     * @param User $user
+     * @param EntityManager $entityManager
+     */
     public function __construct(
         User $user,
-        LogRepository $logRepository,
         EntityManager $entityManager
     )
     {
         $this->user = $user;
-        $this->logRepository = $logRepository;
         $this->entityManager = $entityManager;
+        $this->logRepository = $entityManager->getRepository(Log::class);
     }
 
 

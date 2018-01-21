@@ -5,7 +5,7 @@ namespace App\Model;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
+ * @ORM\Entity
  * @ORM\Table(name="user_group")
  */
 class User2Group

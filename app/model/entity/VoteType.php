@@ -5,7 +5,7 @@ namespace App\Model;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\VoteTypeRepository")
+ * @ORM\Entity
  * @ORM\Table(name="vote_type")
  */
 class VoteType

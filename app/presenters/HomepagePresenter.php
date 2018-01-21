@@ -2,12 +2,11 @@
 
 namespace App\Presenters;
 
-use App\Repository\ProposalRepository;
+use App\Model\Proposal;
 use App\Service\ProposalService;
 use App\Table\IProposalDatagridFactory;
 use App\Table\IProposalTableFactory;
-use Nette;
-use Parsedown;
+use Kdyby\Doctrine\EntityManager;
 
 
 class HomepagePresenter extends SecuredPresenter
@@ -25,10 +24,8 @@ class HomepagePresenter extends SecuredPresenter
      * @var IProposalDatagridFactory
      */
     private $proposalDatagridFactory;
-    /**
-     * @var ProposalRepository
-     */
     private $proposalRepository;
+    private $entityManager;
 
 
     /**
@@ -36,19 +33,20 @@ class HomepagePresenter extends SecuredPresenter
      * @param ProposalService $proposalService
      * @param IProposalTableFactory $proposalTableFactory
      * @param IProposalDatagridFactory $proposalDatagridFactory
-     * @param ProposalRepository $proposalRepository
+     * @param \Kdyby\Doctrine\EntityManager $entityManager
      */
     public function __construct(
         ProposalService $proposalService,
         IProposalTableFactory $proposalTableFactory,
         IProposalDatagridFactory $proposalDatagridFactory,
-        ProposalRepository $proposalRepository
+        EntityManager $entityManager
     )
     {
         $this->proposalService = $proposalService;
         $this->proposalTableFactory = $proposalTableFactory;
         $this->proposalDatagridFactory = $proposalDatagridFactory;
-        $this->proposalRepository = $proposalRepository;
+        $this->proposalRepository = $entityManager->getRepository(Proposal::class);
+        $this->entityManager = $entityManager;
     }
 
 

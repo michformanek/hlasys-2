@@ -2,24 +2,25 @@
 
 namespace App\Service;
 
-
-use App\Repository\ItemRepository;
+use App\Model\Item;
+use Kdyby\Doctrine\EntityManager;
 
 class ItemService
 {
-    /**
-     * @var ItemRepository
-     */
+    private $entityManager;
     private $itemRepository;
-
 
     /**
      * ItemService constructor.
-     * @param ItemRepository $itemRepository
+     * @param EntityManager $entityManager
+     * @internal param ItemRepository $itemRepository
      */
-    public function __construct(ItemRepository $itemRepository)
+    public function __construct(
+        EntityManager $entityManager
+    )
     {
-        $this->itemRepository = $itemRepository;
+        $this->entityManager= $entityManager;
+        $this->itemRepository = $entityManager->getRepository(Item::class);
     }
 
     public function findAll()

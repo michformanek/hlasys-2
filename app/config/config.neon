@@ -41,7 +41,6 @@ services:
 	- App\Service\LogService
 	- App\Service\MailService
 	- App\Service\ProposalService
-	- App\Service\StatusService
 	- App\Service\UserService
 	- App\Service\VoteService
 	- App\Service\VoteTypeService
@@ -67,46 +66,6 @@ services:
 	- App\Table\IVoteTableFactory
 	- App\Table\IWatchTableFactory
 
-	proposalRepository:
-	    class: App\Repository\ProposalRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Proposal
-	proposalVotersRepository:
-	    class: App\Repository\ProposalVotersRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\ProposalVoter
-	userRepository:
-	    class: App\Repository\UserRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\User
-	groupRepository:
-	    class: App\Repository\GroupRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Group
-	voteRepository:
-	    class: App\Repository\VoteRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Vote
-	voteTypeRepository:
-	    class: App\Repository\VoteTypeRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\VoteType
-	watchRepository:
-	    class: App\Repository\WatchRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Watch
-	logRepository:
-	    class: App\Repository\LogRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Log
-	itemRepository:
-	    class: App\Repository\ItemRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Item
-	commentRepository:
-	    class: App\Repository\CommentRepository
-	    tags:
-	        doctrine.repositoryEntity: App\Model\Comment
 	router: App\RouterFactory::createRouter
 
 doctrine:

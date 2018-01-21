@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\WatchRepository")
+ * @ORM\Entity
  * @ORM\Table(name="watch")
  */
 class Watch

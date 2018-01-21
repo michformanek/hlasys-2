@@ -14,14 +14,6 @@ class WatchService
 {
 
     /**
-     * @var WatchRepository
-     */
-    private $watchRepository;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
      * @var \Nette\Security\User
      */
     private $user;
@@ -29,22 +21,22 @@ class WatchService
      * @var LogService
      */
     private $logService;
+    private $entityManager;
+    private $watchRepository;
 
     /**
      * WatchService constructor.
-     * @param WatchRepository $watchRepository
      * @param EntityManager $entityManager
      * @param LogService $logService
      * @param \Nette\Security\User $user
      */
     public function __construct(
-        WatchRepository $watchRepository,
         EntityManager $entityManager,
         LogService $logService,
         \Nette\Security\User $user
     )
     {
-        $this->watchRepository = $watchRepository;
+        $this->watchRepository = $entityManager->getRepository(Watch::class);
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->logService = $logService;

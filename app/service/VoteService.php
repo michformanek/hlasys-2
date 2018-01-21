@@ -3,25 +3,15 @@
 namespace App\Service;
 
 
-use App\Constants\LogMessages;
 use App\Model\Proposal;
 use App\Model\Vote;
-use App\Repository\VoteRepository;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use App\Model\User;
+use Kdyby\Doctrine\EntityManager;
 
 class VoteService
 {
 
-    /**
-     * @var VoteRepository
-     */
-    private $voteRepository;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var User
      */
@@ -34,16 +24,24 @@ class VoteService
      * @var MailService
      */
     private $mailService;
+    private $entityManager;
+    private $voteRepository;
 
+    /**
+     * VoteService constructor.
+     * @param LogService $logService
+     * @param MailService $mailService
+     * @param \Nette\Security\User $user
+     * @param EntityManager $entityManager
+     */
     public function __construct(
-        VoteRepository $voteRepository,
-        EntityManager $entityManager,
         LogService $logService,
         MailService $mailService,
-        \Nette\Security\User $user
+        \Nette\Security\User $user,
+        EntityManager $entityManager
     )
     {
-        $this->voteRepository = $voteRepository;
+        $this->voteRepository = $entityManager->getRepository(Vote::class);
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->logService = $logService;

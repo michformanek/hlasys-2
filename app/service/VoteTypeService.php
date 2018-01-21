@@ -6,33 +6,21 @@ namespace App\Service;
 use App\Model\Group;
 use App\Model\Vote;
 use App\Model\VoteType;
-use App\Repository\VoteTypeRepository;
-use Doctrine\ORM\EntityManager;
-use Tracy\Debugger;
+use Kdyby\Doctrine\EntityManager;
 
 class VoteTypeService
 {
-    /**
-     * @var VoteTypeRepository
-     */
-    private $voteTypeRepository;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var GroupService
-     */
     private $groupService;
+    private $entityManager;
+    private $voteTypeRepository;
 
     public function __construct(
         GroupService $groupService,
-        VoteTypeRepository $voteTypeRepository,
         EntityManager $entityManager
     )
     {
-        $this->voteTypeRepository = $voteTypeRepository;
+        $this->voteTypeRepository = $entityManager->getRepository(VoteType::class);
         $this->entityManager = $entityManager;
         $this->groupService = $groupService;
     }

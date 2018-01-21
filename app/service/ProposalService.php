@@ -9,26 +9,13 @@ use App\Model\Proposal;
 use App\Model\ProposalVoter;
 use App\Model\Status;
 use App\Model\User;
-use App\Model\VoteResult;
-use App\Model\VoteType;
 use App\Model\Watch;
-use App\Repository\ProposalRepository;
-use App\Repository\ProposalVotersRepository;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
+use Kdyby\Doctrine\EntityManager;
 use Nette\DateTime;
 
 class ProposalService
 {
 
-    /**
-     * @var ProposalRepository
-     */
-    private $proposalRepository;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
     /**
      * @var \Nette\Security\User
      */
@@ -45,38 +32,33 @@ class ProposalService
      * @var LogService
      */
     private $logService;
-    /**
-     * @var ProposalVotersRepository
-     */
     private $proposalVotersRepository;
+    private $entityManager;
+    private $proposalRepository;
 
     /**
      * ProposalService constructor.
-     * @param ProposalRepository $proposalRepository
      * @param EntityManager $entityManager
      * @param VoteTypeService $voteTypeService
      * @param MailService $mailService
      * @param LogService $logService
-     * @param ProposalVotersRepository $proposalVotersRepository
      * @param \Nette\Security\User $user
      */
     public function __construct(
-        ProposalRepository $proposalRepository,
         EntityManager $entityManager,
         VoteTypeService $voteTypeService,
         MailService $mailService,
         LogService $logService,
-        ProposalVotersRepository $proposalVotersRepository,
         \Nette\Security\User $user
     )
     {
-        $this->proposalRepository = $proposalRepository;
+        $this->proposalRepository = $entityManager->getRepository(Proposal::class);
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->voteTypeService = $voteTypeService;
         $this->mailService = $mailService;
         $this->logService = $logService;
-        $this->proposalVotersRepository = $proposalVotersRepository;
+        $this->proposalVotersRepository = $entityManager->getRepository(ProposalVoter::class);
     }
 
     public function findAll()

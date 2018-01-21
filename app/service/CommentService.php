@@ -3,25 +3,15 @@
 namespace App\Service;
 
 
-use App\Constants\LogMessages;
 use App\Model\Comment;
 use App\Model\Proposal;
 use App\Model\User;
-use App\Repository\CommentRepository;
 use DateTime;
-use Doctrine\ORM\EntityManager;
+use Kdyby\Doctrine\EntityManager;
 
 class CommentService
 {
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var CommentRepository
-     */
-    private $commentRepository;
     /**
      * @var \Nette\Security\User
      */
@@ -34,21 +24,25 @@ class CommentService
      * @var MailService
      */
     private $mailService;
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    private $commentRepository;
 
     public function __construct(
-        EntityManager $entityManager,
-        CommentRepository $commentRepository,
         LogService $logService,
         MailService $mailService,
-        \Nette\Security\User $user
+        \Nette\Security\User $user,
+        EntityManager $entityManager
     )
     {
 
-        $this->entityManager = $entityManager;
-        $this->commentRepository = $commentRepository;
         $this->user = $user;
         $this->logService = $logService;
         $this->mailService = $mailService;
+        $this->entityManager = $entityManager;
+        $this->commentRepository = $entityManager->getRepository(Comment::class);
     }
 
     /**

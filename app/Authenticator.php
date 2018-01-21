@@ -1,23 +1,21 @@
 <?php
 
-use App\Repository\UserRepository;
 use Nette\Security\Identity;
 
 class MujAuthenticator extends \Nette\Object implements \Nette\Security\IAuthenticator
 {
-    /**
-     * @var UserRepository
-     */
+
     private $userRepository;
-
+    private $entityManager;
 
     /**
-     * Authenticator constructor.
-     * @param UserRepository $userRepository
+     * MujAuthenticator constructor.
+     * @param \Kdyby\Doctrine\EntityManager $entityManager
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(\Kdyby\Doctrine\EntityManager $entityManager)
     {
-        $this->userRepository = $userRepository;
+        $this->entityManager = $entityManager;
+        $this->userRepository = $entityManager->getRepository(\App\Model\User::class);
     }
 
 

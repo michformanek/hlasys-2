@@ -3,21 +3,29 @@
 namespace App\Service;
 
 
-use App\Repository\GroupRepository;
+
+use App\Model\Group;
+use Kdyby\Doctrine\EntityManager;
 
 class GroupService
 {
-
     /**
-     * @var GroupRepository
+     * @var EntityManager
      */
+    private $entityManager;
     private $groupRepository;
 
+
+    /**
+     * GroupService constructor.
+     * @param EntityManager $entityManager
+     */
     public function __construct(
-        GroupRepository $groupRepository
+        EntityManager $entityManager
     )
     {
-        $this->groupRepository = $groupRepository;
+        $this->entityManager = $entityManager;
+        $this->groupRepository = $entityManager->getRepository(Group::class);
     }
 
     public function findAll()
