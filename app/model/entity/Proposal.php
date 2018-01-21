@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="proposal")
  */
-class Proposal
+class Proposal implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -366,4 +366,30 @@ class Proposal
     }
 
 
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'status' => $this->status,
+            'voteType' => $this->voteType,
+            'group' => $this->voteType->getGroup(),
+            'dateStart' => $this->dateStart,
+            'dateEnd' => $this->dateEnd,
+            'description' => $this->description,
+            'items' => $this->items,
+            'watches' => $this->watches,
+            'comments' => $this->comments,
+            'logs' => $this->logs,
+            'votes' => $this->votes,
+            'trash' => $this->trash
+        ];
+    }
 }

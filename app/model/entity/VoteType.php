@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="vote_type")
  */
-class VoteType
+class VoteType implements \JsonSerializable
 {
 
     /**
@@ -141,6 +141,18 @@ class VoteType
     public function setActive($active)
     {
         $this->active = $active;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'text' => $this->getText(),
+            'active' => $this->getActive(),
+            'percentsToPass' => $this->getPercentsToPass(),
+            'usersToPass' => $this->getUsersToPass(),
+            'group' => $this->getGroup(),
+        ];
     }
 
 

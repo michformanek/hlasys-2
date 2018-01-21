@@ -34,10 +34,8 @@ class ProposalDatagrid extends Control
     {
         $grid = new DataGrid($this, $name);
 
-        $grid->setColumnsHideable();
-
         $grid->setDataSource($this->datasource);
-        $grid->addColumnText('id', 'Id')->setSortable();
+        $grid->addColumnText('id', 'Id');
         $grid->addColumnLink('title', 'Název', 'Proposal:detail')->setSortable();
         $grid->addColumnText('price', 'Cena')
             ->setRenderer(function (Proposal $proposal) {

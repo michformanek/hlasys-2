@@ -29,10 +29,10 @@ class GroupApi extends SecuredResourcePresenter
     {
         if (isset($id)) {
             $group = $this->groupService->findOne($id);
-            $this->resource = Convertor::convertGroup($group);
+            $this->resource = json_decode(json_encode($group), true);
         } else {
             $groups = $this->groupService->findAll();
-            $this->resource = Convertor::convertGroups($groups);
+            $this->resource = json_decode(json_encode($groups), true);
         }
         $this->sendResource(IResource::JSON);
     }

@@ -60,7 +60,7 @@ class ProposalApi extends SecuredApi
     public function actionCreate()
     {
         $proposal = $this->proposalService->createProposal($this->getInput()->getData());
-        $this->resource = Convertor::convertProposal($proposal);
+        $this->resource = json_decode(json_encode($proposal), true);;
         $this->sendResource(IResource::JSON);
     }
 
@@ -68,10 +68,10 @@ class ProposalApi extends SecuredApi
     {
         if (isset($id)) {
             $proposal = $this->proposalService->findOne($id);
-            $this->resource = Convertor::convertProposal($proposal);
+            $this->resource = json_decode(json_encode($proposal), true);;
         } else {
             $proposals = $this->proposalService->findAll();
-            $this->resource = Convertor::convertProposals($proposals);
+            $this->resource = json_decode(json_encode($proposals), true);;
         }
         $this->sendResource(IResource::JSON);
     }
@@ -79,43 +79,44 @@ class ProposalApi extends SecuredApi
     public function actionUpdate($id)
     {
         $proposal = $this->proposalService->updateProposal($this->getInput()->getData(),$id);
-        $this->resource = Convertor::convertProposal($proposal);
+        $this->resource = json_decode(json_encode($proposal), true);;
         $this->sendResource(IResource::JSON);
     }
 
     public function actionDelete($id)
     {
         $proposal = $this->proposalService->deleteProposal($id);
-        $this->resource = Convertor::convertProposal($proposal);
+        $this->resource = json_decode(json_encode($proposal), true);
+        $this->resource = json_decode(json_encode($proposal), true);
         $this->sendResource(IResource::JSON);
     }
 
     public function actionReadComments($id)
     {
         $comments = $this->commentService->findByProposalId($id);
-        $this->resource = Convertor::convertComments($comments);
+        $this->resource = json_decode(json_encode($comments), true);
         $this->sendResource(IResource::JSON);
     }
 
     public function actionCreateComment($id)
     {
         $text = $this->getInput()->text;
-        $result = Convertor::convertComment($this->commentService->addComment($text, $id));
-        $this->resource = $result;
+        $result = $this->commentService->addComment($text, $id);
+        $this->resource = json_decode(json_encode($result), true);;
         $this->sendResource(IResource::JSON);
     }
 
     public function actionReadVotes($id)
     {
         $votes = $this->voteService->findByProposalId($id);
-        $this->resource = Convertor::convertVotes($votes);
+        $this->resource = json_decode(json_encode($votes), true);
         $this->sendResource(IResource::JSON);
     }
 
     public function actionUpdateVote($id)
     {
         $type= $this->getInput()->positive;
-        $result = Convertor::convertVote($this->voteService->vote($id, $type));
+        $result = json_decode(json_encode($this->voteService->vote($id, $type)), true);
         $this->resource = $result;
         $this->sendResource(IResource::JSON);
 
@@ -124,7 +125,7 @@ class ProposalApi extends SecuredApi
     public function actionReadWatches($id)
     {
         $watches = $this->watchService->findByProposalId($id);
-        $this->resource = Convertor::convertWatches($watches);
+        $this->resource = json_decode(json_encode($watches), true);
         $this->sendResource(IResource::JSON);
     }
 
@@ -141,7 +142,7 @@ class ProposalApi extends SecuredApi
     public function actionReadLogs($id)
     {
         $logs = $this->logService->findByProposalId($id);
-        $this->resource = Convertor::convertLogs($logs);
+        $this->resource = json_decode(json_encode($logs), true);
         $this->sendResource(IResource::JSON);
     }
 }

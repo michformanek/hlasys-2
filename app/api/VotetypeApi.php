@@ -28,10 +28,10 @@ class VotetypeApi extends SecuredResourcePresenter
     {
         if (isset($id)) {
             $voteType = $this->voteTypeService->find($id);
-            $this->resource = Convertor::convertVoteType($voteType);
+            $this->resource = json_decode(json_encode($voteType), true);
         } else {
             $voteTypes = $this->voteTypeService->findAll();
-            $this->resource = Convertor::convertVoteTypes($voteTypes);
+            $this->resource = json_decode(json_encode($voteTypes), true);;
         }
         $this->sendResource(IResource::JSON);
     }
@@ -39,14 +39,14 @@ class VotetypeApi extends SecuredResourcePresenter
     public function actionDelete($id)
     {
         $voteType = $this->voteTypeService->delete($id);
-        $this->resource = Convertor::convertVoteType($voteType);
+        $this->resource = json_decode(json_encode($voteType), true);
         $this->sendResource(IResource::JSON);
     }
 
     public function actionCreate()
     {
         $voteType = $this->voteTypeService->create($this->getInput()->getData());
-        $this->resource = Convertor::convertVoteType($voteType);
+        $this->resource = json_decode(json_encode($voteType), true);
         $this->sendResource(IResource::JSON);
     }
 }

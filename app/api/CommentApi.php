@@ -27,11 +27,11 @@ class CommentApi extends SecuredApi
     {
         if (isset($id)) {
             $comment = $this->commentService->findOne($id);
-            $this->resource = Convertor::convertComment($comment);
+            $this->resource = json_decode(json_encode($comment), true);
         }
         else{
             $comments = $this->commentService->findAll();
-            $this->resource = Convertor::convertComments($comments);
+            $this->resource = json_decode(json_encode($comments), true);
         }
         $this->sendResource(IResource::JSON);
     }
@@ -39,7 +39,7 @@ class CommentApi extends SecuredApi
     public function actionUpdate($id)
     {
         $text = $this->getInput()->text;
-        $result = Convertor::convertComment($this->commentService->updateComment($text,$id));
+        $result = json_decode(json_encode($this->commentService->updateComment($text,$id)), true);
         $this->resource = $result;
         $this->sendResource(IResource::JSON);
     }

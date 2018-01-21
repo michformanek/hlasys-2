@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="status")
  */
-class Status
+class Status implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -53,4 +53,14 @@ class Status
     {
         $this->name = $name;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+        ];
+    }
+
+
 }

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="comment")
  */
-class Comment
+class Comment implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -118,5 +118,22 @@ class Comment
     public function setText($text)
     {
         $this->text = $text;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->getId(),
+            'text' => $this->getText(),
+            'author' => $this->getUser(),
+            'date' => $this->getDate(),
+        ];
     }
 }
