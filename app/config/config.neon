@@ -20,12 +20,17 @@ extensions:
     replicator: Kdyby\Replicator\DI\ReplicatorExtension
     restful: Drahak\Restful\DI\RestfulExtension
     visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension
+    mailing: Ublaboo\Mailing\DI\MailingExtension
 
-mail:
-    smtp: true
-    host: smtp.seznam.cz
-    username: mf21@seznam.cz
-    password: XH8azo7I
+mailing:
+    do: both
+    log_directory: '%appDir%/../log/mails'
+    mail_images_base_path: %wwwDir% # this is default option
+    mails: [
+        default_sender: michal.formanek@ceskapojistovna.cz
+    ]
+
+
 restful:
 	convention: 'snake_case'
 	cacheDir: '%tempDir%/cache'

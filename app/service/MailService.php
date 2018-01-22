@@ -5,80 +5,34 @@ namespace App\Service;
 use App\Model\Comment;
 use App\Model\Proposal;
 use App\Model\Status;
-use App\Model\User;
 use App\Model\Vote;
-use Latte\Engine;
-use Nette\Mail\IMailer;
-use Nette\Mail\Message;
-use Tracy\Debugger;
-use Tracy\ILogger;
+use Kdyby\Doctrine\EntityManager;
+use Ublaboo\Mailing\MailFactory;
 
 class MailService
 {
 
     /**
-     * @var IMailer
+     * @var EntityManager
      */
-    private $mailer;
+    private $entityManager;
+    /**
+     * @var MailFactory
+     */
+    private $mailFactory;
 
+    /**
+     * MailService constructor.
+     * @param EntityManager $entityManager
+     * @param MailFactory $mailFactory
+     */
     public function __construct(
-        IMailer $mailer
+        EntityManager $entityManager,
+        MailFactory $mailFactory
     )
     {
-
-        $this->mailer = $mailer;
-    }
-
-    private function sendCommentEmail(Comment $comment, $params)
-    {
-        $recipients = $this->getRecipients($comment->getProposal());
-        if (count($recipients) < 1) return;
-        $latte = new Engine();
-        $mail = new Message();
-        $this->addRecipients($mail, $recipients);
-        $mail->setSubject($params['subject']);
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/templates/mail/comment.latte', $params));
-        $this->sendMessage($mail);
-
-    }
-
-    private function sendVoteEmail(Vote $vote, $params)
-    {
-        $recipients = $this->getRecipients($vote->getProposal());
-        if (count($recipients) < 1) return;
-        $latte = new Engine();
-        $mail = new Message();
-        $this->addRecipients($mail, $recipients);
-        $mail->setSubject($params['subject']);
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/templates/mail/vote.latte', $params));
-        $this->sendMessage($mail);
-
-    }
-
-    private function sendStatusEmail(Proposal $proposal, $params)
-    {
-        $recipients = $this->getRecipients($proposal);
-        if (count($recipients) < 1) return;
-        $latte = new Engine();
-        $mail = new Message();
-        $this->addRecipients($mail, $recipients);
-        $mail->setSubject($params['subject']);
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/templates/mail/status.latte', $params));
-        $this->sendMessage($mail);
-
-    }
-
-    private function sendProposalEmail(Proposal $proposal, $params)
-    {
-        $recipients = $this->getRecipients($proposal);
-        if (count($recipients) < 1) return;
-        $latte = new Engine();
-        $mail = new Message();
-        $this->addRecipients($mail, $recipients);
-        $mail->setSubject($params['subject']);
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/templates/mail/proposal.latte', $params));
-        $this->sendMessage($mail);
-
+        $this->entityManager = $entityManager;
+        $this->mailFactory = $mailFactory;
     }
 
     public function sendCommentAdded(Comment $comment)
@@ -88,125 +42,128 @@ class MailService
             'header' => "Nový komentář u návrhu",
             'subject' => $subject,
             'comment' => $comment,
+            'recipients' => $this->getRecipients($comment->getProposal()),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $comment->getProposal()->getId(),
         ];
-        $this->sendCommentEmail($comment, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\CommentMail', $params);
+        $mail->send();
     }
 
     public function sendCommentDeleted(Comment $comment)
     {
         $subject = "[HLASYS] Byl odstranen komentar u navrhu: " . $comment->getProposal()->getTitle();
-
         $params = [
             'header' => "Smazaný komentář u návrhu",
             'subject' => $subject,
             'comment' => $comment,
+            'recipients' => $this->getRecipients($comment->getProposal()),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $comment->getProposal()->getId(),
         ];
-        $this->sendCommentEmail($comment, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\CommentMail', $params);
+        $mail->send();
     }
 
     public function sendCommentEdited(Comment $comment)
     {
         $subject = "[HLASYS] Byl upraven komentar u navrhu: " . $comment->getProposal()->getTitle();
-
         $params = [
             'header' => "Upravený  komentář u návrhu",
             'title' => $subject,
             'comment' => $comment,
+            'recipients' => $this->getRecipients($comment->getProposal()),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $comment->getProposal()->getId(),
         ];
-
-        $this->sendCommentEmail($comment, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\CommentMail', $params);
+        $mail->send();
     }
 
     public function sendVoteAdded(Vote $vote)
     {
         $subject = "[HLASYS] Byl přidán hlas u návrhu: " . $vote->getProposal()->getTitle();
-
         $params = [
             'header' => "Přidán hlas u návrhu",
             'title' => $subject,
             'vote' => $vote,
+            'recipients' => $this->getRecipients($vote->getProposal()),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $vote->getProposal()->getId(),
         ];
-
-        $this->sendVoteEmail($vote, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\VoteMail', $params);
+        $mail->send();
     }
 
     public function sendVoteChanged(Vote $vote)
     {
         $subject = "[HLASYS] Byl změněn hlas u návrhu: " . $vote->getProposal()->getTitle();
-
         $params = [
             'header' => "Smazaný komentář u návrhu",
             'subject' => $subject,
             'vote' => $vote,
+            'recipients' => $this->getRecipients($vote->getProposal()),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $vote->getProposal()->getId(),
         ];
-
-        $this->sendVoteEmail($vote, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\VoteMail', $params);
+        $mail->send();
     }
-
 
     public function sendStatusChanged(Proposal $proposal, Status $originalStatus, Status $newStatus)
     {
         $subject = "[HLASYS] Byl změněn stav u návrhu: " . $proposal->getTitle();
-
         $params = [
             'header' => "Změna stavu u návrhu",
             'subject' => $subject,
+            'recipients' => $this->getRecipients($proposal),
             'text' => "Stav návrhu se změnil z " . $originalStatus->getName() . " na " . $newStatus->getName(),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
-
-        $this->sendStatusEmail($proposal, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\StatusMail', $params);
+        $mail->send();
     }
 
     public function sendProposalCreated(Proposal $proposal)
     {
         $subject = "[HLASYS] Byl přidán nový návrh: " . $proposal->getTitle();
-
         $params = [
             'title' => "Přidán nový návrh",
             'subject' => $subject,
             'items' => $proposal->getItems(),
+            'recipients' => $this->getRecipients($proposal),
             'proposal' => $proposal,
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
-
-        $this->sendProposalEmail($proposal, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\ProposalMail', $params);
+        $mail->send();
     }
 
     public function sendProposalEdited(Proposal $proposal)
     {
         $subject = "[HLASYS] Byl upraven návrh: " . $proposal->getTitle();
-
         $params = [
             'title' => "Návrh upraven",
             'subject' => $subject,
             'items' => $proposal->getItems(),
+            'recipients' => $this->getRecipients($proposal),
             'proposal' => $proposal,
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
-
-        $this->sendProposalEmail($proposal, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\ProposalMail', $params);
+        $mail->send();
 
     }
 
     public function sendProposalDeleted(Proposal $proposal)
     {
         $subject = "[HLASYS] Byl odstraněn návrh: " . $proposal->getTitle();
-
         $params = [
             'title' => "Návrh odstraněn",
             'subject' => $subject,
             'items' => $proposal->getItems(),
             'proposal' => $proposal,
+            'recipients' => $this->getRecipients($proposal),
             'url' => 'http://'.$_SERVER['SERVER_NAME'].'/proposal/detail/' . $proposal->getId(),
         ];
 
-        $this->sendProposalEmail($proposal, $params);
+        $mail = $this->mailFactory->createByType('App\Mailing\ProposalMail', $params);
+        $mail->send();
 
     }
 
@@ -214,41 +171,6 @@ class MailService
     //FIXME pouzit
     public function sendResult($proposal)
     {
-
-    }
-
-    //FIXME pouzit
-    public function sendDigest()
-    {
-
-    }
-
-    public function sendResultEmail(Proposal $proposal, $recipients)
-    {
-        $latte = new Engine();
-        $mail = new Message();
-        $this->addRecipients($mail, $recipients);
-        $mail->setSubject("[HLASYS] Bylo ukončeno hlasování u návrhu: "); //FIXME titulek + id
-        $mail->setHtmlBody($latte->renderToString(__DIR__ . '/templates/mail/result.latte'));
-        $this->sendMessage($mail);
-    }
-
-    public function sendMessage(Message $message)
-    {
-        $message->setFrom("HLASYS <mf21@seznam.cz>");
-
-        try {
-            $this->mailer->send($message);
-        } catch (\Exception $exception) {
-            Debugger::log($exception, ILogger::ERROR);
-        }
-    }
-
-    private function addRecipients(Message $message, $recipients)
-    {
-        foreach ($recipients as $recipient) {
-            $message->addBcc($recipient->getEmail());
-        }
 
     }
 

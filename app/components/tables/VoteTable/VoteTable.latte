@@ -3,7 +3,7 @@
         <table class="table-sm text-center col-md-12">
         <tbody>
     {/first}
-    {first 5}<tr>{/first}
+    {first 7}<tr>{/first}
         {if $iterator->getCounter() - 1 < $positiveCount}
             <td class="table-success" style="color:#fff;">{$vote->getUsername()}</td>
         {elseif $iterator->getCounter() - 1 < $negativeCount + $positiveCount}
@@ -12,7 +12,7 @@
             <td class="table-active"
                 style="color:#000;">{$vote->getUsername()}</td>
         {/if}
-    {last 5}</tr>{/last}
+    {last 7}</tr>{/last}
     {last}
         </tbody>
         </table>
